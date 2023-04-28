@@ -25,8 +25,6 @@ public class KeyboardHandling implements KeyListener {
             case KeyEvent.VK_LEFT -> leftPressed = true;
             case KeyEvent.VK_RIGHT -> rightPressed = true;
             case KeyEvent.VK_SPACE -> spacePressed = true;
-            default -> {
-            }
         }
     }
 
