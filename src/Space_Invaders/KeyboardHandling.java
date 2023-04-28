@@ -33,7 +33,10 @@ public class KeyboardHandling implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_LEFT -> leftPressed = false;
+            case KeyEvent.VK_LEFT -> {
+                leftPressed = false;
+                System.out.println("Left pressed");
+            }
             case KeyEvent.VK_RIGHT -> rightPressed = false;
             case KeyEvent.VK_SPACE -> spacePressed = false;
         }

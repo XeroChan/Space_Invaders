@@ -16,6 +16,7 @@ public class ImagePanel extends JPanel {
         images = new ArrayList<>();
         keyboard = new KeyboardHandling();
         setFocusable(true);
+        requestFocusInWindow();
         addKeyListener(keyboard);
     }
 
