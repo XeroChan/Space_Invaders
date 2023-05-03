@@ -5,8 +5,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Game extends JPanel {
-    JPanel gameFrame, score, lives, game;
-    JLabel s,l,g;
+    JPanel gameFrame, score, lives;
+    JLabel s,l;
     Spaceship spaceship;
     static ImagePanel graphicsPanel;
     Game(){
