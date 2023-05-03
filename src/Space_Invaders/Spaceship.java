@@ -33,9 +33,6 @@ public class Spaceship {
         return resizeImage(cannonImage, targetWidth, targetHeight);
     }
 
-    public int getImageWidth(){ return cannonImage.getWidth(); }
-    public int getImageHeight(){ return cannonImage.getHeight(); }
-
     public void updatePosition(int deltaX, int deltaY) {
         posX += deltaX;
         posY += deltaY;
@@ -56,5 +53,14 @@ public class Spaceship {
     public void setPosY(int posY) {
         this.posY = posY;
     }
+
+    public Laser shootLaser() {
+        int laserX = posX;
+        int laserY = posY  - getResizedImage(69, 69).getHeight() / 4;
+        Laser laser = new Laser(laserX, laserY, 1, Color.GREEN, 15, 15);
+
+        return laser;
+    }
+
 
 }

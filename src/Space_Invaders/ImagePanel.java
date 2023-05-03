@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 public class ImagePanel extends JPanel {
     private ArrayList<Image> images;
+    private ArrayList<Laser> lasers;
+
     private KeyboardHandling keyboard;
     private Spaceship spaceship;
     private boolean initialValuesSet = false;
@@ -13,6 +15,7 @@ public class ImagePanel extends JPanel {
 
     public ImagePanel() {
         images = new ArrayList<>();
+        lasers = new ArrayList<>();
         keyboard = new KeyboardHandling();
         addKeyListener(keyboard);
 
@@ -48,11 +51,13 @@ public class ImagePanel extends JPanel {
             for (Image image : images) {
                 g.drawImage(image, getWidth() / 2 - image.getWidth(this) / 2, getHeight() - image.getHeight(this), null);
             }
+            for (Laser laser : lasers) {
+                g.drawImage(laser.draw(), laser.getPosX(), laser.getPosY(), null);
+            }
         }
     }
 
     public void update() {
-
         if (keyboard.isLeftPressed()) {
             spaceship.updatePosition(-2, 0);
         }
@@ -60,9 +65,20 @@ public class ImagePanel extends JPanel {
             spaceship.updatePosition(2, 0);
         }
         if (keyboard.isSpacePressed()) {
-            spaceship.updatePosition(0, -2);
+            Laser laser = spaceship.shootLaser();
+            lasers.add(laser);
+            System.out.println("Laser shot at x: " + laser.getPosX() + " y: " + laser.getPosY());
+            System.out.println("Lasers in ArrayList: " + lasers.size());
         }
+
+        for (Laser laser : lasers) { // loop through all lasers and update their positions
+            laser.move(); // move the laser object
+        }
+        lasers.removeIf(laser -> laser.getPosY() < 0); // remove lasers that have gone off-screen
+
         repaint();
         System.out.println("New ship coords: x: " + spaceship.getPosX() + " y: " + spaceship.getPosY());
     }
+
+
 }
