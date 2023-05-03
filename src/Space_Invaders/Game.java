@@ -2,12 +2,13 @@ package Space_Invaders;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class Game extends JPanel {
     JPanel gameFrame, score, lives, game;
     JLabel s,l,g;
     Spaceship spaceship;
-    ImagePanel graphicsPanel;
+    static ImagePanel graphicsPanel;
     Game(){
         gameFrame = new JPanel();
         gameFrame.setLayout(new BorderLayout());
@@ -37,6 +38,7 @@ public class Game extends JPanel {
 
 
     }
+
 
     private void run() {
         while (true) {

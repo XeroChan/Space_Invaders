@@ -21,27 +21,19 @@ public class Spaceship {
         }
     }
 
-    public BufferedImage getResizedImage(int targetWidth, int targetHeight) {
-        // Resize the cannon image to targetWidth x targetHeight pixels
-        BufferedImage resizedCannonImage = resizeImage(cannonImage, targetWidth, targetHeight);
-        System.out.println("Resized image width: " + resizedCannonImage.getWidth() + ", height: " + resizedCannonImage.getHeight());
-        return resizedCannonImage;
-    }
-
-    public void render(Graphics g, int maxWidth, int maxHeight) {
-        BufferedImage resizedCannonImage = getResizedImage(cannonImage.getWidth() / 10, cannonImage.getHeight() / 10);
-        int x = maxWidth / 2 - resizedCannonImage.getWidth() / 2 - 10; // subtract 10 pixels for padding
-        int y = maxHeight - resizedCannonImage.getHeight();
-        g.drawImage(resizedCannonImage, x, y, null);
-    }
-
-
     public static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
         BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics2D = resizedImage.createGraphics();
         graphics2D.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
         graphics2D.dispose();
         return resizedImage;
+    }
+
+    public BufferedImage getResizedImage(int targetWidth, int targetHeight) {
+        // Resize the cannon image to targetWidth x targetHeight pixels
+        BufferedImage resizedCannonImage = resizeImage(cannonImage, targetWidth, targetHeight);
+        System.out.println("Resized image width: " + resizedCannonImage.getWidth() + ", height: " + resizedCannonImage.getHeight());
+        return resizedCannonImage;
     }
 
 }
