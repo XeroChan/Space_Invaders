@@ -20,13 +20,6 @@ public class ImagePanel extends JPanel {
         images = new ArrayList<>();
         keyboard = new KeyboardHandling();
         addKeyListener(keyboard);
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                panelWidth = getWidth();
-                panelHeight = getHeight();
-            }
-        });
     }
 
     public void addImage(Image image) {
@@ -41,8 +34,8 @@ public class ImagePanel extends JPanel {
         repaint();
     }
 
-    public void addSpaceship(Image spaceship) {
-
+    public void addSpaceship(Image img) {
+        spaceship = img;
         int spaceshipWidth = spaceship.getWidth(this);
         int spaceshipHeight = spaceship.getHeight(this);
         System.out.println("Panel height: " + panelHeight + " Panel width: " + panelWidth);
