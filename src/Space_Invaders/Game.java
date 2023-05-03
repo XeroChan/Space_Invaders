@@ -43,7 +43,6 @@ public class Game extends JPanel {
     private void run() {
         while (true) {
             graphicsPanel.update();
-            // other game logic goes here
             try {
                 Thread.sleep(300);
             } catch (InterruptedException e) {
