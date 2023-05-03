@@ -10,8 +10,8 @@ public class ImagePanel extends JPanel {
     private ArrayList<Image> images;
     private Image spaceship;
     private KeyboardHandling keyboard;
-    private int posX;
-    private int posY;
+    private int posX=100;
+    private int posY=100;
     private int panelWidth;
     private int panelHeight;
 
@@ -48,8 +48,7 @@ public class ImagePanel extends JPanel {
         System.out.println("Panel height: " + panelHeight + " Panel width: " + panelWidth);
         System.out.println("Image height: " + spaceshipHeight + " Image width: " + spaceshipWidth);
 
-        posX = (panelWidth - spaceshipWidth) / 2;
-        posY = panelHeight - spaceshipHeight;
+
 
     }
 

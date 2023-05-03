@@ -8,8 +8,6 @@ import javax.imageio.ImageIO;
 
 public class Spaceship {
     private BufferedImage cannonImage;
-    private int cannonX = 0; // Example x coordinate for the cannon
-    private int cannonY = 0; // Example y coordinate for the cannon
 
     public Spaceship() {
         try {
