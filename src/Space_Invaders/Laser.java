@@ -36,7 +36,6 @@ public class Laser {
         return image;
     }
 
-
     public Rectangle getBounds() {
         return new Rectangle(posX, posY, width, height);
     }
