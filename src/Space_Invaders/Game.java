@@ -2,12 +2,10 @@ package Space_Invaders;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 public class Game extends JPanel {
     JPanel gameFrame, score, lives;
     JLabel s,l;
-    Spaceship spaceship;
     static ImagePanel graphicsPanel;
     Game(){
         gameFrame = new JPanel();
@@ -27,27 +25,23 @@ public class Game extends JPanel {
         l.setForeground(Color.decode("#ffffff"));
         lives.add(l);
 
-
-        spaceship = new Spaceship();
-        Image spaceshipResized = spaceship.getResizedImage(69,69);
         graphicsPanel = new ImagePanel();
         graphicsPanel.setBackground(Color.decode("#4E458C"));
-        graphicsPanel.addSpaceship(spaceshipResized);
         gameFrame.add(graphicsPanel, BorderLayout.CENTER);
         new Thread(this::run).start();
-
-
     }
 
-
     private void run() {
+        Spaceship spaceship = new Spaceship();
+        graphicsPanel.addSpaceship(spaceship);
         while (true) {
             graphicsPanel.update();
             try {
-                Thread.sleep(300);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
     }
+
 }

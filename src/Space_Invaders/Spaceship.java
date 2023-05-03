@@ -8,11 +8,13 @@ import javax.imageio.ImageIO;
 
 public class Spaceship {
     private BufferedImage cannonImage;
+    private int posX;
+    private int posY;
+
 
     public Spaceship() {
         try {
             cannonImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("..\\assets\\spcship.png")));
-            System.out.println("Image width: " + cannonImage.getWidth() + ", height: " + cannonImage.getHeight());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -28,10 +30,31 @@ public class Spaceship {
     }
 
     public BufferedImage getResizedImage(int targetWidth, int targetHeight) {
-        // Resize the cannon image to targetWidth x targetHeight pixels
-        BufferedImage resizedCannonImage = resizeImage(cannonImage, targetWidth, targetHeight);
-        System.out.println("Resized image width: " + resizedCannonImage.getWidth() + ", height: " + resizedCannonImage.getHeight());
-        return resizedCannonImage;
+        return resizeImage(cannonImage, targetWidth, targetHeight);
+    }
+
+    public int getImageWidth(){ return cannonImage.getWidth(); }
+    public int getImageHeight(){ return cannonImage.getHeight(); }
+
+    public void updatePosition(int deltaX, int deltaY) {
+        posX += deltaX;
+        posY += deltaY;
+    }
+
+    public int getPosX() {
+        return posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
+    public void setPosX(int posX) {
+        this.posX = posX;
+    }
+
+    public void setPosY(int posY) {
+        this.posY = posY;
     }
 
 }
