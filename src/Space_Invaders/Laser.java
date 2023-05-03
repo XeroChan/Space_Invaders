@@ -33,7 +33,7 @@ public class Laser {
         g2d.setColor(color);
         g2d.fillRect(0, 0, width, height);
         g2d.dispose();
-        return image; // Cast the BufferedImage to an Image
+        return image;
     }
 
 
