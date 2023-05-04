@@ -13,11 +13,12 @@ public class ImagePanel extends JPanel {
     private boolean initialValuesSet = false;
     private Image bufferImage;
     private Graphics bufferGraphics;
+    private long lastShotTime;
+    private static final long MIN_TIME_BETWEEN_SHOTS = 200;
 
     public void createBufferImage() {
         bufferImage = createImage(getWidth(), getHeight());
         bufferGraphics = bufferImage.getGraphics();
-
     }
 
 
@@ -80,9 +81,13 @@ public class ImagePanel extends JPanel {
         if (keyboard.isRightPressed()) {
             spaceship.updatePosition(2, 0);
         }
-        if (keyboard.isSpacePressed()) {
+        long currentTime = System.currentTimeMillis();
+        if (keyboard.isSpacePressed() && currentTime - lastShotTime >= MIN_TIME_BETWEEN_SHOTS) {
             Laser laser = spaceship.shootLaser();
             lasers.add(laser);
+            lastShotTime = currentTime;
+            System.out.println("Laser shot at x: " + laser.getPosX() + " y: " + laser.getPosY());
+            System.out.println("Lasers in ArrayList: " + lasers.size());
         }
 
         for (Laser laser : lasers) {
