@@ -24,7 +24,7 @@ public class Laser {
 
     public void move() {
         posY -= speed;
-        System.out.println("Laser posY: " + posY);
+        //System.out.println("Laser posY: " + posY);
     }
 
     public BufferedImage draw() {

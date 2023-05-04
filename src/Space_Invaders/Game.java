@@ -26,7 +26,6 @@ public class Game extends JPanel {
         lives.add(l);
 
         graphicsPanel = new ImagePanel();
-        graphicsPanel.setBackground(Color.decode("#4E458C"));
         gameFrame.add(graphicsPanel, BorderLayout.CENTER);
         new Thread(this::run).start();
     }

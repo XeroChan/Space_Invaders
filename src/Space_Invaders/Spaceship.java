@@ -54,9 +54,9 @@ public class Spaceship {
     }
 
     public Laser shootLaser() {
-        int laserX = posX;
+        int laserX = posX + getResizedImage(69, 69).getHeight() / 2;
         int laserY = posY  - getResizedImage(69, 69).getHeight() / 4;
-        return new Laser(laserX, laserY, 1, Color.cyan, 15, 15);
+        return new Laser(laserX, laserY, 3, Color.green, 5, 8);
     }
 
 
