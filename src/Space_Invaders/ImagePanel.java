@@ -7,7 +7,6 @@ import java.util.ArrayList;
 public class ImagePanel extends JPanel {
     private ArrayList<Image> images;
     private ArrayList<Laser> lasers;
-
     private KeyboardHandling keyboard;
     private Spaceship spaceship;
     private int spaceshipWidth;
