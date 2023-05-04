@@ -48,11 +48,6 @@ public class Laser {
         this.visible = visible;
     }
 
-    public void updatePosition() {
-        posY -= speed;
-
-    }
-
     public int getPosX() {
         return posX;
     }
