@@ -17,13 +17,10 @@ public class ImagePanel extends JPanel {
     private long lastShotTime;
     private static final long MIN_TIME_BETWEEN_SHOTS = 200;
 
-
     public void createBufferImage() {
         bufferImage = createImage(getWidth(), getHeight());
         bufferGraphics = bufferImage.getGraphics();
     }
-
-
 
     public ImagePanel() {
         images = new ArrayList<>();
@@ -51,7 +48,6 @@ public class ImagePanel extends JPanel {
         spaceshipHeight = spaceship.getResizedImage(69, 69).getHeight();
     }
 
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -77,7 +73,6 @@ public class ImagePanel extends JPanel {
         g.drawImage(bufferImage, 0, 0, null);
     }
 
-
     public void update() {
         if (keyboard.isLeftPressed() && spaceship.getPosX() > 0) {
             spaceship.updatePosition(-3, 0);
@@ -85,23 +80,16 @@ public class ImagePanel extends JPanel {
         if (keyboard.isRightPressed() && spaceship.getPosX()+spaceshipWidth<getWidth()) {
             spaceship.updatePosition(3, 0);
         }
-
         long currentTime = System.currentTimeMillis();
         if (keyboard.isSpacePressed() && currentTime - lastShotTime >= MIN_TIME_BETWEEN_SHOTS) {
             Laser laser = spaceship.shootLaser();
             lasers.add(laser);
             lastShotTime = currentTime;
         }
-
         for (Laser laser : lasers) {
             laser.move();
         }
         lasers.removeIf(laser -> laser.getPosY() < 0);
-
         repaint();
     }
-
-
-
-
 }
