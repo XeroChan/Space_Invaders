@@ -11,6 +11,7 @@ public class Menu {
 
     Menu() {
         frame = new JFrame("Space Invaders");
+        frame.setAlwaysOnTop(true);
 
         menu = new JPanel();
         menu.setBackground(Color.decode("#021226"));

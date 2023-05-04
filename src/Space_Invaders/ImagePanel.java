@@ -10,11 +10,14 @@ public class ImagePanel extends JPanel {
 
     private KeyboardHandling keyboard;
     private Spaceship spaceship;
+    private int spaceshipWidth;
+    private int spaceshipHeight;
     private boolean initialValuesSet = false;
     private Image bufferImage;
     private Graphics bufferGraphics;
     private long lastShotTime;
     private static final long MIN_TIME_BETWEEN_SHOTS = 200;
+
 
     public void createBufferImage() {
         bufferImage = createImage(getWidth(), getHeight());
@@ -45,6 +48,8 @@ public class ImagePanel extends JPanel {
 
     public void addSpaceship(Spaceship spaceship) {
         this.spaceship = spaceship;
+        spaceshipWidth = spaceship.getResizedImage(69, 69).getWidth();
+        spaceshipHeight = spaceship.getResizedImage(69, 69).getHeight();
     }
 
 
@@ -55,12 +60,12 @@ public class ImagePanel extends JPanel {
             createBufferImage();
         }
         bufferGraphics.clearRect(0, 0, getWidth(), getHeight());
-        bufferGraphics.setColor(Color.decode("#4E458C"));
+        bufferGraphics.setColor(Color.decode("#021226"));
         bufferGraphics.fillRect(0, 0, getWidth(), getHeight());
         if (spaceship != null) {
             if (!initialValuesSet) {
-                spaceship.setPosX(getWidth() / 2 - spaceship.getResizedImage(69, 69).getWidth()/2);
-                spaceship.setPosY(getHeight() - spaceship.getResizedImage(69, 69).getHeight());
+                spaceship.setPosX(getWidth() / 2 - spaceshipWidth/2);
+                spaceship.setPosY(getHeight() - spaceshipHeight);
                 initialValuesSet = true;
             } else bufferGraphics.drawImage(spaceship.getResizedImage(69, 69), spaceship.getPosX(), spaceship.getPosY(), null);
         }
@@ -75,19 +80,18 @@ public class ImagePanel extends JPanel {
 
 
     public void update() {
-        if (keyboard.isLeftPressed()) {
-            spaceship.updatePosition(-2, 0);
+        if (keyboard.isLeftPressed() && spaceship.getPosX() > 0) {
+            spaceship.updatePosition(-3, 0);
         }
-        if (keyboard.isRightPressed()) {
-            spaceship.updatePosition(2, 0);
+        if (keyboard.isRightPressed() && spaceship.getPosX()+spaceshipWidth<getWidth()) {
+            spaceship.updatePosition(3, 0);
         }
+
         long currentTime = System.currentTimeMillis();
         if (keyboard.isSpacePressed() && currentTime - lastShotTime >= MIN_TIME_BETWEEN_SHOTS) {
             Laser laser = spaceship.shootLaser();
             lasers.add(laser);
             lastShotTime = currentTime;
-            System.out.println("Laser shot at x: " + laser.getPosX() + " y: " + laser.getPosY());
-            System.out.println("Lasers in ArrayList: " + lasers.size());
         }
 
         for (Laser laser : lasers) {
@@ -97,6 +101,7 @@ public class ImagePanel extends JPanel {
 
         repaint();
     }
+
 
 
 

@@ -12,14 +12,14 @@ public class Game extends JPanel {
         gameFrame.setLayout(new BorderLayout());
 
         score = new JPanel();
-        score.setBackground(Color.decode("#021226"));
+        score.setBackground(Color.decode("#4E458C"));
         gameFrame.add(score, BorderLayout.NORTH);
         s = new JLabel("score");
         s.setForeground(Color.decode("#ffffff"));
         score.add(s);
 
         lives = new JPanel();
-        lives.setBackground(Color.decode("#021226"));
+        lives.setBackground(Color.decode("#4E458C"));
         gameFrame.add(lives,BorderLayout.SOUTH);
         l = new JLabel("lives");
         l.setForeground(Color.decode("#ffffff"));
