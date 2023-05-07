@@ -2,8 +2,6 @@ package Space_Invaders;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Game extends JPanel {
     JPanel gameFrame, score, lives;
