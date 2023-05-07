@@ -7,12 +7,16 @@ import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 
 public class ImagePanel extends JPanel {
-    private ArrayList<Image> images;
-    private ArrayList<Laser> lasers;
+    private ArrayList<Alien> aliens;
+    private ArrayList<Laser> spaceshipLasers;
+    private ArrayList<Laser> alienLasers;
     private KeyboardHandling keyboard;
     private Spaceship spaceship;
+    private Alien alien;
     private int spaceshipWidth;
     private int spaceshipHeight;
+    private int alienWidth;
+    private int alienHeight;
     private boolean initialValuesSet = false;
     private Image bufferImage;
     private Graphics bufferGraphics;
@@ -25,8 +29,9 @@ public class ImagePanel extends JPanel {
     }
 
     public ImagePanel() {
-        images = new ArrayList<>();
-        lasers = new ArrayList<>();
+        aliens = new ArrayList<>();
+        spaceshipLasers = new ArrayList<>();
+        alienLasers = new ArrayList<>();
         keyboard = new KeyboardHandling();
         addKeyListener(keyboard);
 
@@ -40,36 +45,36 @@ public class ImagePanel extends JPanel {
                 if (spaceship != null) {
                     int panelWidth = getWidth();
                     int panelHeight = getHeight();
-                    int spaceshipWidth = spaceship.getResizedImage(69, 69).getWidth();
-                    int spaceshipHeight = spaceship.getResizedImage(69, 69).getHeight();
 
                     int startX = (panelWidth - spaceshipWidth) / 2;
                     int startY = panelHeight - spaceshipHeight;
 
                     spaceship.setPosX(startX);
                     spaceship.setPosY(startY);
+
+                    int totalAlienWidth = alienWidth * aliens.size();
+                    int startAlienX = (panelWidth - totalAlienWidth) / 2;
+
+                    for (int i = 0; i < aliens.size(); i++) {
+                        Alien alien = aliens.get(i);
+                        alien.setPosX(startAlienX + i * alienWidth);
+                    }
                 }
             }
         });
 
     }
 
-    public void addImage(Image image) {
-        images.add(image);
-        int width = 0;
-        int height = 0;
-        for (Image img : images) {
-            width = Math.max(width, img.getWidth(this));
-            height = Math.max(height, img.getHeight(this));
-        }
-        setPreferredSize(new Dimension(width, height));
-        repaint();
-    }
-
     public void addSpaceship(Spaceship spaceship) {
         this.spaceship = spaceship;
         spaceshipWidth = spaceship.getResizedImage(69, 69).getWidth();
         spaceshipHeight = spaceship.getResizedImage(69, 69).getHeight();
+    }
+
+    public void addAlien(Alien alien) {
+        alienWidth = alien.getResizedImage(69, 69).getWidth();;
+        alienHeight = alien.getResizedImage(69, 69).getHeight();;
+        aliens.add(alien);
     }
 
     @Override
@@ -88,10 +93,13 @@ public class ImagePanel extends JPanel {
                 initialValuesSet = true;
             } else bufferGraphics.drawImage(spaceship.getResizedImage(69, 69), spaceship.getPosX(), spaceship.getPosY(), null);
         }
-        for (Image image : images) {
-            bufferGraphics.drawImage(image, getWidth() / 2 - image.getWidth(this) / 2, getHeight() - image.getHeight(this), null);
+        for (Alien alien : aliens) {
+            bufferGraphics.drawImage(alien.getResizedImage(69, 69), alien.getPosX(), alien.getPosY(), null);
         }
-        for (Laser laser : lasers) {
+        for (Laser laser : spaceshipLasers) {
+            bufferGraphics.drawImage(laser.draw(), laser.getPosX(), laser.getPosY(), null);
+        }
+        for (Laser laser : alienLasers) {
             bufferGraphics.drawImage(laser.draw(), laser.getPosX(), laser.getPosY(), null);
         }
         g.drawImage(bufferImage, 0, 0, null);
@@ -107,14 +115,26 @@ public class ImagePanel extends JPanel {
         long currentTime = System.currentTimeMillis();
         if (keyboard.isSpacePressed() && currentTime - lastShotTime >= MIN_TIME_BETWEEN_SHOTS) {
             Laser laser = spaceship.shootLaser();
-            lasers.add(laser);
+            spaceshipLasers.add(laser);
             lastShotTime = currentTime;
         }
-        for (Laser laser : lasers) {
+        for (Laser laser : spaceshipLasers) {
             laser.move();
         }
-        lasers.removeIf(laser -> laser.getPosY() < 0);
+        spaceshipLasers.removeIf(laser -> laser.getPosY() < 0);
+        for (Laser alienLaser : alienLasers) {
+            alienLaser.moveDown();
+        }
+
+        for (Alien alien : aliens) {
+            if (Math.random() < 0.011) {
+                Laser laser = alien.shootLaser();
+                alienLasers.add(laser);
+            }
+        }
+        alienLasers.removeIf(laser -> laser.getPosY() > getHeight());
         repaint();
     }
+
 
 }

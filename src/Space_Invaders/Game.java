@@ -33,6 +33,14 @@ public class Game extends JPanel {
     private void run() {
         Spaceship spaceship = new Spaceship();
         graphicsPanel.addSpaceship(spaceship);
+
+        for (int i = 0; i < 5; i++) {
+            Alien alien = new Alien();
+            alien.setPosX(i * 100); // Adjust the starting X position of each alien
+            alien.setPosY(0); // Place the aliens at the top of the screen
+            graphicsPanel.addAlien(alien);
+        }
+
         while (true) {
             graphicsPanel.update();
             try {

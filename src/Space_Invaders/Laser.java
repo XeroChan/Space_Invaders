@@ -27,6 +27,10 @@ public class Laser {
         //System.out.println("Laser posY: " + posY);
     }
 
+    public void moveDown() {
+        posY += speed;
+    }
+
     public BufferedImage draw() {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = image.createGraphics();
