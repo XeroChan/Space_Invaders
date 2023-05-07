@@ -2,6 +2,8 @@ package Space_Invaders;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 
 public class ImagePanel extends JPanel {
@@ -27,6 +29,28 @@ public class ImagePanel extends JPanel {
         lasers = new ArrayList<>();
         keyboard = new KeyboardHandling();
         addKeyListener(keyboard);
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                createBufferImage();
+                revalidate();
+                repaint();
+
+                if (spaceship != null) {
+                    int panelWidth = getWidth();
+                    int panelHeight = getHeight();
+                    int spaceshipWidth = spaceship.getResizedImage(69, 69).getWidth();
+                    int spaceshipHeight = spaceship.getResizedImage(69, 69).getHeight();
+
+                    int startX = (panelWidth - spaceshipWidth) / 2;
+                    int startY = panelHeight - spaceshipHeight;
+
+                    spaceship.setPosX(startX);
+                    spaceship.setPosY(startY);
+                }
+            }
+        });
 
     }
 
@@ -92,4 +116,5 @@ public class ImagePanel extends JPanel {
         lasers.removeIf(laser -> laser.getPosY() < 0);
         repaint();
     }
+
 }
