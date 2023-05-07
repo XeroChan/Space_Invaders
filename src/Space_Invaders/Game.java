@@ -2,12 +2,16 @@ package Space_Invaders;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Game extends JPanel {
     JPanel gameFrame, score, lives;
-    JLabel s,l;
+    JLabel s, l;
     static ImagePanel graphicsPanel;
-    Game(){
+    Timer timer;
+
+    Game() {
         gameFrame = new JPanel();
         gameFrame.setLayout(new BorderLayout());
 
@@ -20,42 +24,37 @@ public class Game extends JPanel {
 
         lives = new JPanel();
         lives.setBackground(Color.decode("#4E458C"));
-        gameFrame.add(lives,BorderLayout.SOUTH);
+        gameFrame.add(lives, BorderLayout.SOUTH);
         l = new JLabel("lives");
         l.setForeground(Color.decode("#ffffff"));
         lives.add(l);
 
         graphicsPanel = new ImagePanel();
         gameFrame.add(graphicsPanel, BorderLayout.CENTER);
-        new Thread(this::run).start();
+
+        run();
+        timer = new Timer(10, e -> graphicsPanel.update());
+        timer.start();
     }
 
     private void run() {
         Spaceship spaceship = new Spaceship();
         graphicsPanel.addSpaceship(spaceship);
 
-        int numAliens = 5;
-        int alienGap = 20;
-        Alien alienDim = new Alien();
-        int alienWidth = alienDim.getResizedImage(69,69).getWidth();
-        int totalAlienWidth = alienWidth * numAliens;
-        int startX = (graphicsPanel.getWidth() - (totalAlienWidth + alienGap * (numAliens - 1))) / 2;
+        new Thread(() -> {
+            int numAliens = 5;
+            int alienGap = 10;
+            Alien alienDim = new Alien();
+            int alienWidth = alienDim.getResizedImage(69, 69).getWidth();
+            int totalAlienWidth = alienWidth * numAliens;
+            int startX = (graphicsPanel.getWidth() - (totalAlienWidth + alienGap * (numAliens - 1))) / 2;
 
-        for (int i = 0; i < numAliens; i++) {
-            Alien alien = new Alien();
-            alien.setPosX(startX + i * (alienWidth + alienGap));
-            alien.setPosY(0);
-            graphicsPanel.addAlien(alien);
-        }
-
-        while (true) {
-            graphicsPanel.update();
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            for (int i = 0; i < numAliens; i++) {
+                Alien alien = new Alien();
+                alien.setPosX(startX + i * (alienWidth + alienGap));
+                alien.setPosY(0);
+                graphicsPanel.addAlien(alien);
             }
-        }
+        }).start();
     }
-
 }
