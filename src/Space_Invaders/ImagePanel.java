@@ -21,7 +21,9 @@ public class ImagePanel extends JPanel {
     private Image bufferImage;
     private Graphics bufferGraphics;
     private long lastShotTime;
+    private long alienShotTime;
     private static final long MIN_TIME_BETWEEN_SHOTS = 200;
+    private static final long MIN_TIME_BETWEEN_ALIEN_SHOTS = 280;
 
     public void createBufferImage() {
         bufferImage = createImage(getWidth(), getHeight());
@@ -53,7 +55,7 @@ public class ImagePanel extends JPanel {
                     spaceship.setPosY(startY);
 
                     int totalAlienWidth = alienWidth * aliens.size();
-                    int gap = 100; // Specify the desired gap between aliens
+                    int gap = 100;
                     int startAlienX = (panelWidth - (totalAlienWidth + gap * (aliens.size() - 1))) / 2;
 
                     for (int i = 0; i < aliens.size(); i++) {
@@ -128,9 +130,12 @@ public class ImagePanel extends JPanel {
         }
 
         for (Alien alien : aliens) {
-            if (Math.random() < 0.011) {
-                Laser laser = alien.shootLaser();
-                alienLasers.add(laser);
+            if (Math.random() < (0.1 / aliens.size())) {
+                if(currentTime - alienShotTime >= MIN_TIME_BETWEEN_ALIEN_SHOTS) {
+                    Laser laser = alien.shootLaser();
+                    alienLasers.add(laser);
+                    alienShotTime = currentTime;
+                }
             }
         }
         alienLasers.removeIf(laser -> laser.getPosY() > getHeight());
