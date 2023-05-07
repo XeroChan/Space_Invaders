@@ -54,7 +54,7 @@ public class Alien {
 
     public Laser shootLaser() {
         int laserX = posX + getResizedImage(69, 69).getHeight() / 2;
-        int laserY = posY  + getResizedImage(69, 69).getHeight();
+        int laserY = posY  + getResizedImage(69, 69).getWidth();
         return new Laser(laserX, laserY, 3, Color.green, 4, 10);
     }
 }
