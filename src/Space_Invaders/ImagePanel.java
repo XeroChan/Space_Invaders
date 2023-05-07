@@ -12,7 +12,6 @@ public class ImagePanel extends JPanel {
     private ArrayList<Laser> alienLasers;
     private KeyboardHandling keyboard;
     private Spaceship spaceship;
-    private Alien alien;
     private int spaceshipWidth;
     private int spaceshipHeight;
     private int alienWidth;
@@ -75,8 +74,8 @@ public class ImagePanel extends JPanel {
     }
 
     public void addAlien(Alien alien) {
-        alienWidth = alien.getResizedImage(69, 69).getWidth();;
-        alienHeight = alien.getResizedImage(69, 69).getHeight();;
+        alienWidth = alien.getResizedImage(69, 69).getWidth();
+        alienHeight = alien.getResizedImage(69, 69).getHeight();
         aliens.add(alien);
     }
 
