@@ -14,7 +14,7 @@ public class Spaceship {
 
     public Spaceship() {
         try {
-            cannonImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("..\\assets\\spcship.png")));
+            cannonImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("..\\assets\\spaceship.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,7 +56,7 @@ public class Spaceship {
     public Laser shootLaser() {
         int laserX = posX + getResizedImage(69, 69).getHeight() / 2;
         int laserY = posY  - getResizedImage(69, 69).getHeight() / 4;
-        return new Laser(laserX, laserY, 3, Color.green, 4, 10);
+        return new Laser(laserX, laserY, 3, Color.red, 4, 10);
     }
 
 
