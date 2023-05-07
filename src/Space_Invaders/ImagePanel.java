@@ -53,11 +53,12 @@ public class ImagePanel extends JPanel {
                     spaceship.setPosY(startY);
 
                     int totalAlienWidth = alienWidth * aliens.size();
-                    int startAlienX = (panelWidth - totalAlienWidth) / 2;
+                    int gap = 100; // Specify the desired gap between aliens
+                    int startAlienX = (panelWidth - (totalAlienWidth + gap * (aliens.size() - 1))) / 2;
 
                     for (int i = 0; i < aliens.size(); i++) {
                         Alien alien = aliens.get(i);
-                        alien.setPosX(startAlienX + i * alienWidth);
+                        alien.setPosX(startAlienX + i * (alienWidth + gap));
                     }
                 }
             }

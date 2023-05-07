@@ -27,6 +27,7 @@ public class Menu {
         start = new JButton("Play");
         start.setPreferredSize(new Dimension(200, 50));
         start.setBackground(Color.decode("#ffffff"));
+        start.setFocusPainted(false);
 
         start.addActionListener(e -> {
             Game gamePanel = new Game();

@@ -34,10 +34,17 @@ public class Game extends JPanel {
         Spaceship spaceship = new Spaceship();
         graphicsPanel.addSpaceship(spaceship);
 
-        for (int i = 0; i < 5; i++) {
+        int numAliens = 5;
+        int alienGap = 20;
+        Alien alienDim = new Alien();
+        int alienWidth = alienDim.getResizedImage(69,69).getWidth();
+        int totalAlienWidth = alienWidth * numAliens;
+        int startX = (graphicsPanel.getWidth() - (totalAlienWidth + alienGap * (numAliens - 1))) / 2;
+
+        for (int i = 0; i < numAliens; i++) {
             Alien alien = new Alien();
-            alien.setPosX(i * 100); // Adjust the starting X position of each alien
-            alien.setPosY(0); // Place the aliens at the top of the screen
+            alien.setPosX(startX + i * (alienWidth + alienGap));
+            alien.setPosY(0);
             graphicsPanel.addAlien(alien);
         }
 
