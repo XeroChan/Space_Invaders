@@ -10,6 +10,7 @@ public class Alien {
     private BufferedImage alienImage;
     private int posX;
     private int posY;
+    private int lives = 4;
 
     public Alien() {
         try {
@@ -56,5 +57,17 @@ public class Alien {
         int laserX = posX + getResizedImage(69, 69).getHeight() / 2;
         int laserY = posY  + getResizedImage(69, 69).getWidth();
         return new Laser(laserX, laserY, 3, Color.green, 4, 10);
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(posX, posY, getResizedImage(69,69).getWidth(), getResizedImage(69,69).getHeight());
+    }
+
+    public int getHealth() {
+        return lives;
+    }
+
+    public void reduceHealth() {
+        lives--;
     }
 }

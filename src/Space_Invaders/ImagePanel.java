@@ -5,6 +5,9 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
+
 
 public class ImagePanel extends JPanel {
     private ArrayList<Alien> aliens;
@@ -80,6 +83,37 @@ public class ImagePanel extends JPanel {
     }
 
     public void update() {
+
+        List<Alien> aliensToRemove = new ArrayList<>();
+        List<Laser> lasersToRemove = new ArrayList<>();
+
+        // Check for spaceship and alien collision
+        for (Alien alien : new ArrayList<>(aliens)) {
+            if (CollisionHandling.checkCollision(spaceship, alien)) {
+                // Handle spaceship and alien collision
+                handleSpaceshipAlienCollision();
+                break; // Break out of the loop since only one collision can occur at a time
+            }
+        }
+
+        // Check for spaceship lasers and alien collision
+        Iterator<Laser> laserIterator = spaceshipLasers.iterator();
+        while (laserIterator.hasNext()) {
+            Laser laser = laserIterator.next();
+            for (Alien alien : new ArrayList<>(aliens)) {
+                if (CollisionHandling.checkCollision(laser, alien)) {
+                    // Handle spaceship laser and alien collision
+                    handleLaserAlienCollision(laser, alien);
+                    lasersToRemove.add(laser);
+                    break; // Break out of the loop since only one collision can occur at a time
+                }
+            }
+        }
+
+        // Remove aliens and lasers
+        aliens.removeAll(aliensToRemove);
+        spaceshipLasers.removeAll(lasersToRemove);
+
         if (keyboard.isLeftPressed() && spaceship.getPosX() > 0) {
             spaceship.updatePosition(-3, 0);
         }
@@ -112,6 +146,36 @@ public class ImagePanel extends JPanel {
         alienLasers.removeIf(laser -> laser.getPosY() > getHeight());
         repaint();
     }
+
+    private void handleSpaceshipAlienCollision() {
+        // Implement logic to handle spaceship and alien collision
+        // For example, reduce spaceship health, remove alien, etc.
+    }
+
+    private void handleLaserAlienCollision(Laser laser, Alien alien) {
+        // Remove the laser
+        spaceshipLasers.remove(laser);
+
+        // Reduce alien health or remove the alien
+        if (alien.getHealth() > 0) {
+            alien.reduceHealth();
+        } else {
+            aliens.remove(alien);
+        }
+    }
+
+    private void handleLaserSpaceshipCollision(Laser laser) {
+        // Remove the laser
+        alienLasers.remove(laser);
+
+        // Reduce spaceship health or perform other actions
+        spaceship.reduceHealth();
+        if (spaceship.getHealth() <= 0) {
+            // Spaceship destroyed, perform game over actions
+            // ...
+        }
+    }
+
 
     @Override
     protected void paintComponent(Graphics g) {

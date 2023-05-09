@@ -10,6 +10,7 @@ public class Spaceship {
     private BufferedImage cannonImage;
     private int posX;
     private int posY;
+    private int lives = 3;
 
 
     public Spaceship() {
@@ -59,5 +60,16 @@ public class Spaceship {
         return new Laser(laserX, laserY, 3, Color.red, 4, 10);
     }
 
+    public Rectangle getBounds() {
+        return new Rectangle(posX, posY, getResizedImage(69, 69).getWidth(), getResizedImage(69, 69).getHeight());
+    }
 
+
+    public int getHealth() {
+        return lives;
+    }
+
+    public void reduceHealth() {
+        lives--;
+    }
 }
