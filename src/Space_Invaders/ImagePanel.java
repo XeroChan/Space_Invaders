@@ -84,12 +84,9 @@ public class ImagePanel extends JPanel {
 
     public void update() {
 
-        List<Alien> aliensToRemove = new ArrayList<>();
-        List<Laser> lasersToRemove = new ArrayList<>();
-
         // Check for spaceship and alien collision
-        for (Alien alien : new ArrayList<>(aliens)) {
-            if (CollisionHandling.checkCollision(spaceship, alien)) {
+        for (int i=0; i<aliens.size();i++) {
+            if (CollisionHandling.checkCollision(spaceship, aliens.get(i))) {
                 // Handle spaceship and alien collision
                 handleSpaceshipAlienCollision();
                 break; // Break out of the loop since only one collision can occur at a time
@@ -97,22 +94,24 @@ public class ImagePanel extends JPanel {
         }
 
         // Check for spaceship lasers and alien collision
-        Iterator<Laser> laserIterator = spaceshipLasers.iterator();
-        while (laserIterator.hasNext()) {
-            Laser laser = laserIterator.next();
-            for (Alien alien : new ArrayList<>(aliens)) {
-                if (CollisionHandling.checkCollision(laser, alien)) {
+        for (int i=0; i<spaceshipLasers.size();i++) {
+            for (int j=0; j<aliens.size();j++) {
+                if (CollisionHandling.checkCollision(spaceshipLasers.get(i), aliens.get(j))) {
                     // Handle spaceship laser and alien collision
-                    handleLaserAlienCollision(laser, alien);
-                    lasersToRemove.add(laser);
+                    handleLaserAlienCollision(spaceshipLasers.get(i), aliens.get(j));
                     break; // Break out of the loop since only one collision can occur at a time
                 }
             }
         }
 
-        // Remove aliens and lasers
-        aliens.removeAll(aliensToRemove);
-        spaceshipLasers.removeAll(lasersToRemove);
+        // Check for alien lasers and spaceship collision
+        for (int i=0; i<alienLasers.size();i++) {
+            if (CollisionHandling.checkCollision(alienLasers.get(i), spaceship)) {
+                // Handle alien laser and spaceship collision
+                handleLaserSpaceshipCollision(alienLasers.get(i));
+                break; // Break out of the loop since only one collision can occur at a time
+            }
+        }
 
         if (keyboard.isLeftPressed() && spaceship.getPosX() > 0) {
             spaceship.updatePosition(-3, 0);
