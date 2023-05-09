@@ -79,34 +79,6 @@ public class ImagePanel extends JPanel {
         aliens.add(alien);
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (bufferImage == null) {
-            createBufferImage();
-        }
-        bufferGraphics.clearRect(0, 0, getWidth(), getHeight());
-        bufferGraphics.setColor(Color.decode("#021226"));
-        bufferGraphics.fillRect(0, 0, getWidth(), getHeight());
-        if (spaceship != null) {
-            if (!initialValuesSet) {
-                spaceship.setPosX(getWidth() / 2 - spaceshipWidth/2);
-                spaceship.setPosY(getHeight() - spaceshipHeight);
-                initialValuesSet = true;
-            } else bufferGraphics.drawImage(spaceship.getResizedImage(69, 69), spaceship.getPosX(), spaceship.getPosY(), null);
-        }
-        for (Alien alien : aliens) {
-            bufferGraphics.drawImage(alien.getResizedImage(69, 69), alien.getPosX(), alien.getPosY(), null);
-        }
-        for (Laser laser : spaceshipLasers) {
-            bufferGraphics.drawImage(laser.draw(), laser.getPosX(), laser.getPosY(), null);
-        }
-        for (Laser laser : alienLasers) {
-            bufferGraphics.drawImage(laser.draw(), laser.getPosX(), laser.getPosY(), null);
-        }
-        g.drawImage(bufferImage, 0, 0, null);
-    }
-
     public void update() {
         if (keyboard.isLeftPressed() && spaceship.getPosX() > 0) {
             spaceship.updatePosition(-3, 0);
@@ -141,5 +113,31 @@ public class ImagePanel extends JPanel {
         repaint();
     }
 
-
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (bufferImage == null) {
+            createBufferImage();
+        }
+        bufferGraphics.clearRect(0, 0, getWidth(), getHeight());
+        bufferGraphics.setColor(Color.decode("#021226"));
+        bufferGraphics.fillRect(0, 0, getWidth(), getHeight());
+        if (spaceship != null) {
+            if (!initialValuesSet) {
+                spaceship.setPosX(getWidth() / 2 - spaceshipWidth/2);
+                spaceship.setPosY(getHeight() - spaceshipHeight);
+                initialValuesSet = true;
+            } else bufferGraphics.drawImage(spaceship.getResizedImage(69, 69), spaceship.getPosX(), spaceship.getPosY(), null);
+        }
+        for (Alien alien : aliens) {
+            bufferGraphics.drawImage(alien.getResizedImage(69, 69), alien.getPosX(), alien.getPosY(), null);
+        }
+        for (Laser laser : spaceshipLasers) {
+            bufferGraphics.drawImage(laser.draw(), laser.getPosX(), laser.getPosY(), null);
+        }
+        for (Laser laser : alienLasers) {
+            bufferGraphics.drawImage(laser.draw(), laser.getPosX(), laser.getPosY(), null);
+        }
+        g.drawImage(bufferImage, 0, 0, null);
+    }
 }
