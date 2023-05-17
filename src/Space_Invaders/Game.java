@@ -27,11 +27,13 @@ public class Game extends JPanel {
         l.setForeground(Color.decode("#ffffff"));
         lives.add(l);
 
-        graphicsPanel = new ImagePanel(frame);
+        timer = new Timer(10, e -> graphicsPanel.update());
+        graphicsPanel = new ImagePanel(frame, timer, s);
+
         gameFrame.add(graphicsPanel, BorderLayout.CENTER);
 
         run();
-        timer = new Timer(10, e -> graphicsPanel.update());
+
         timer.start();
     }
 
@@ -53,6 +55,7 @@ public class Game extends JPanel {
                 alien.setPosY(0);
                 graphicsPanel.addAlien(alien);
             }
+            graphicsPanel.setAlienNumber(numAliens);
         }).start();
     }
 }

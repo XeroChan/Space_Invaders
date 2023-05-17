@@ -32,11 +32,6 @@ public class Alien {
         return resizeImage(alienImage, targetWidth, targetHeight);
     }
 
-    public void updatePosition(int deltaX, int deltaY) {
-        posX += deltaX;
-        posY += deltaY;
-    }
-
     public int getPosX() {
         return posX;
     }
@@ -69,5 +64,15 @@ public class Alien {
 
     public void reduceHealth() {
         lives--;
+    }
+
+    public void moveLeft() {
+        posX--;
+    }
+    public void moveRight() {
+        posX++;
+    }
+    public void moveDown() {
+        posY++;
     }
 }

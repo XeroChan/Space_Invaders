@@ -2,21 +2,28 @@ package Space_Invaders;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 
 public class Endgame extends JPanel {
     JPanel endgamePanel,endScreen, score;
     JLabel s,e;
 
-    Endgame() {
+    Endgame(int points) throws IOException {
         endgamePanel = new JPanel();
         endgamePanel.setLayout(new BorderLayout());
 
         score = new JPanel();
         score.setBackground(Color.decode("#4E458C"));
         endgamePanel.add(score, BorderLayout.NORTH);
-        s = new JLabel("Highscore");
+        if (Integer.parseInt(getHighscore())<points) {
+            s = new JLabel("Highscore = "+points);
+            setHighscore(points);
+        } else {
+            s = new JLabel("Highscore = "+getHighscore());
+        }
         s.setForeground(Color.decode("#ffffff"));
         score.add(s);
+
 
         endScreen = new JPanel();
         endScreen.setBackground(Color.decode("#4E458C"));
@@ -38,5 +45,17 @@ public class Endgame extends JPanel {
 
         endgamePanel.add(centerPanel, BorderLayout.CENTER);
 
+    }
+    public void setHighscore(int points) throws IOException {
+
+        String str = String.valueOf(points);
+        BufferedWriter writer = new BufferedWriter(new FileWriter("src/data/highscore.txt"));
+        writer.write(str);
+        writer.close();
+    }
+
+    public String getHighscore() throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader("src/data/highscore.txt"));
+        return reader.readLine();
     }
 }

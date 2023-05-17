@@ -4,11 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
 public class ImagePanel extends JPanel {
     GameFrame frame;
+    Timer timer;
     private ArrayList<Alien> aliens;
     private ArrayList<Laser> spaceshipLasers;
     private ArrayList<Laser> alienLasers;
@@ -25,18 +27,22 @@ public class ImagePanel extends JPanel {
     private long alienShotTime;
     private static final long MIN_TIME_BETWEEN_SHOTS = 200;
     private static final long MIN_TIME_BETWEEN_ALIEN_SHOTS = 280;
-
+    private JLabel highscore;
+    private int points;
+    private int numAliens;
     public void createBufferImage() {
         bufferImage = createImage(getWidth(), getHeight());
         bufferGraphics = bufferImage.getGraphics();
     }
 
-    public ImagePanel(GameFrame frame) {
+    public ImagePanel(GameFrame frame, Timer timer, JLabel score) {
         aliens = new ArrayList<>();
         spaceshipLasers = new ArrayList<>();
         alienLasers = new ArrayList<>();
         keyboard = new KeyboardHandling();
         this.frame = frame;
+        this.timer = timer;
+        this.highscore = score;
         addKeyListener(keyboard);
 
         addComponentListener(new ComponentAdapter() {
@@ -135,6 +141,31 @@ public class ImagePanel extends JPanel {
                     alienShotTime = currentTime;
                 }
             }
+            if(aliens.get(0).getPosX()>0) {
+                for (int m=0; m<aliens.size();m++) {
+                    aliens.get(m).moveLeft();
+                    if(aliens.get(m).getPosY()>=getHeight()) {
+                        aliens.get(m).moveDown();
+                    }
+                }
+            } else{
+                for (int m=0; m<aliens.size();m++) {
+                    aliens.get(m).moveRight();
+                    if(aliens.get(m).getPosY()>=getHeight()) {
+                        aliens.get(m).moveDown();
+                    }
+                }
+            }
+            /*
+            if (aliens.get(aliens.size()-1).getPosX()>=getWidth()) {
+                for (int n=0; n<aliens.size();n++) {
+                    aliens.get(n).moveLeft();
+                    if(aliens.get(n).getPosY()>=getHeight()) {
+                        aliens.get(n).moveDown();
+                    }
+                }
+            }
+             */
         }
         alienLasers.removeIf(laser -> laser.getPosY() > getHeight());
         repaint();
@@ -146,24 +177,34 @@ public class ImagePanel extends JPanel {
     private void handleLaserAlienCollision(Laser laser, Alien alien) {
         spaceshipLasers.remove(laser);
 
-        if (alien.getHealth() >=1) alien.reduceHealth();
-        else aliens.remove(alien);
+        if (alien.getHealth() > 1) alien.reduceHealth();
+        else{
+            aliens.remove(alien);
+            points += 10;
+            highscore.setText("Score = "+points);
+        }
     }
 
     private void handleLaserSpaceshipCollision(Laser laser) {
         alienLasers.remove(laser);
 
-
-        if (spaceship.getHealth() >= 1) spaceship.reduceHealth();
+        if (spaceship.getHealth() > 1) spaceship.reduceHealth();
         else {
-            /*Endgame endPanel = new Endgame();
-            endPanel.endgamePanel.setPreferredSize(frame.getSize());
+            timer.stop();
+            System.out.println("Timer stopped");
+            Endgame endPanel;
+            try {
+                endPanel = new Endgame(points);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            endPanel.setPreferredSize(frame.getSize());
             frame.getContentPane().removeAll();
             frame.getContentPane().add(endPanel.endgamePanel);
             frame.setMinimumSize(frame.getSize());
             frame.pack();
             frame.requestFocus();
-            endPanel.endgamePanel.requestFocus();*/
+            endPanel.endgamePanel.requestFocus();
         }
     }
 
@@ -194,5 +235,9 @@ public class ImagePanel extends JPanel {
             bufferGraphics.drawImage(laser.draw(), laser.getPosX(), laser.getPosY(), null);
         }
         g.drawImage(bufferImage, 0, 0, null);
+    }
+
+    public void setAlienNumber(int numAliens) {
+        this.numAliens = numAliens;
     }
 }
