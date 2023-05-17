@@ -9,7 +9,7 @@ public class Game extends JPanel {
     static ImagePanel graphicsPanel;
     Timer timer;
 
-    Game() {
+    Game(GameFrame frame) {
         gameFrame = new JPanel();
         gameFrame.setLayout(new BorderLayout());
 
@@ -27,7 +27,7 @@ public class Game extends JPanel {
         l.setForeground(Color.decode("#ffffff"));
         lives.add(l);
 
-        graphicsPanel = new ImagePanel();
+        graphicsPanel = new ImagePanel(frame);
         gameFrame.add(graphicsPanel, BorderLayout.CENTER);
 
         run();

@@ -4,18 +4,21 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Menu {
-    JFrame frame;
+    public GameFrame getFrame() {
+        return frame;
+    }
+
+    GameFrame frame;
     JPanel menu, title;
     JLabel titleLabel;
     JButton start;
 
     Menu() {
-        frame = new JFrame("Space Invaders");
-        frame.setAlwaysOnTop(true);
-        frame.setResizable(false);
+        frame = new GameFrame();
 
         menu = new JPanel();
         menu.setBackground(Color.decode("#021226"));
+        menu.setLayout(new BorderLayout());
 
         title = new JPanel();
         title.setBackground(Color.decode("#021226"));
@@ -31,7 +34,7 @@ public class Menu {
         start.setFocusPainted(false);
 
         start.addActionListener(e -> {
-            Game gamePanel = new Game();
+            Game gamePanel = new Game(frame);
             gamePanel.gameFrame.setPreferredSize(frame.getSize());
             frame.getContentPane().removeAll();
             frame.getContentPane().add(gamePanel.gameFrame);
@@ -41,7 +44,6 @@ public class Menu {
             gamePanel.graphicsPanel.requestFocus();
         });
 
-        menu.setLayout(new BorderLayout());
         menu.add(title, BorderLayout.NORTH);
 
         JPanel centerPanel = new JPanel(new GridBagLayout());
@@ -56,13 +58,10 @@ public class Menu {
         JLabel spaceLightspeed = new JLabel(new ImageIcon("src\\assets\\lightspeed_sv.gif"));
         centerPanel.add(spaceLightspeed, c);
 
-
         menu.add(centerPanel, BorderLayout.CENTER);
 
         frame.add(menu);
 
-        frame.setSize(500, 800);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
 

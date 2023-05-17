@@ -5,11 +5,10 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Iterator;
 
 
 public class ImagePanel extends JPanel {
+    GameFrame frame;
     private ArrayList<Alien> aliens;
     private ArrayList<Laser> spaceshipLasers;
     private ArrayList<Laser> alienLasers;
@@ -32,11 +31,12 @@ public class ImagePanel extends JPanel {
         bufferGraphics = bufferImage.getGraphics();
     }
 
-    public ImagePanel() {
+    public ImagePanel(GameFrame frame) {
         aliens = new ArrayList<>();
         spaceshipLasers = new ArrayList<>();
         alienLasers = new ArrayList<>();
         keyboard = new KeyboardHandling();
+        this.frame = frame;
         addKeyListener(keyboard);
 
         addComponentListener(new ComponentAdapter() {
@@ -84,32 +84,26 @@ public class ImagePanel extends JPanel {
 
     public void update() {
 
-        // Check for spaceship and alien collision
         for (int i=0; i<aliens.size();i++) {
             if (CollisionHandling.checkCollision(spaceship, aliens.get(i))) {
-                // Handle spaceship and alien collision
                 handleSpaceshipAlienCollision();
-                break; // Break out of the loop since only one collision can occur at a time
+                break;
             }
         }
 
-        // Check for spaceship lasers and alien collision
         for (int i=0; i<spaceshipLasers.size();i++) {
             for (int j=0; j<aliens.size();j++) {
                 if (CollisionHandling.checkCollision(spaceshipLasers.get(i), aliens.get(j))) {
-                    // Handle spaceship laser and alien collision
                     handleLaserAlienCollision(spaceshipLasers.get(i), aliens.get(j));
-                    break; // Break out of the loop since only one collision can occur at a time
+                    break;
                 }
             }
         }
 
-        // Check for alien lasers and spaceship collision
         for (int i=0; i<alienLasers.size();i++) {
             if (CollisionHandling.checkCollision(alienLasers.get(i), spaceship)) {
-                // Handle alien laser and spaceship collision
                 handleLaserSpaceshipCollision(alienLasers.get(i));
-                break; // Break out of the loop since only one collision can occur at a time
+                break;
             }
         }
 
@@ -133,10 +127,10 @@ public class ImagePanel extends JPanel {
             alienLaser.moveDown();
         }
 
-        for (Alien alien : aliens) {
+        for (int k=0; k<aliens.size();k++) {
             if (Math.random() < (0.1 / aliens.size())) {
                 if(currentTime - alienShotTime >= MIN_TIME_BETWEEN_ALIEN_SHOTS) {
-                    Laser laser = alien.shootLaser();
+                    Laser laser = aliens.get(k).shootLaser();
                     alienLasers.add(laser);
                     alienShotTime = currentTime;
                 }
@@ -147,31 +141,29 @@ public class ImagePanel extends JPanel {
     }
 
     private void handleSpaceshipAlienCollision() {
-        // Implement logic to handle spaceship and alien collision
-        // For example, reduce spaceship health, remove alien, etc.
     }
 
     private void handleLaserAlienCollision(Laser laser, Alien alien) {
-        // Remove the laser
         spaceshipLasers.remove(laser);
 
-        // Reduce alien health or remove the alien
-        if (alien.getHealth() > 0) {
-            alien.reduceHealth();
-        } else {
-            aliens.remove(alien);
-        }
+        if (alien.getHealth() >=1) alien.reduceHealth();
+        else aliens.remove(alien);
     }
 
     private void handleLaserSpaceshipCollision(Laser laser) {
-        // Remove the laser
         alienLasers.remove(laser);
 
-        // Reduce spaceship health or perform other actions
-        spaceship.reduceHealth();
-        if (spaceship.getHealth() <= 0) {
-            // Spaceship destroyed, perform game over actions
-            // ...
+
+        if (spaceship.getHealth() >= 1) spaceship.reduceHealth();
+        else {
+            /*Endgame endPanel = new Endgame();
+            endPanel.endgamePanel.setPreferredSize(frame.getSize());
+            frame.getContentPane().removeAll();
+            frame.getContentPane().add(endPanel.endgamePanel);
+            frame.setMinimumSize(frame.getSize());
+            frame.pack();
+            frame.requestFocus();
+            endPanel.endgamePanel.requestFocus();*/
         }
     }
 
