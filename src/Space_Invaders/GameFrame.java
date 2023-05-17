@@ -1,7 +1,6 @@
 package Space_Invaders;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class GameFrame extends JFrame {
     public GameFrame() {

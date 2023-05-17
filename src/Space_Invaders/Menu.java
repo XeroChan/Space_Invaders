@@ -4,9 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Menu {
-    public GameFrame getFrame() {
-        return frame;
-    }
 
     GameFrame frame;
     JPanel menu, title;

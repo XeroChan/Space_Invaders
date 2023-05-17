@@ -10,7 +10,6 @@ public class Laser {
     private Color color;
     private int width;
     private int height;
-    private boolean visible;
 
     public Laser(int x, int y, int speed, Color color, int width, int height) {
         this.posX = x;
@@ -42,14 +41,6 @@ public class Laser {
 
     public Rectangle getBounds() {
         return new Rectangle(posX, posY, width, height);
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 
     public int getPosX() {
