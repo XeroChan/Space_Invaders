@@ -18,7 +18,6 @@ public class Laser {
         this.color = color;
         this.width = width;
         this.height = height;
-        this.visible = true;
     }
 
     public void move() {
