@@ -32,22 +32,6 @@ public class Alien {
         return resizeImage(alienImage, targetWidth, targetHeight);
     }
 
-    public int getPosX() {
-        return posX;
-    }
-
-    public int getPosY() {
-        return posY;
-    }
-
-    public void setPosX(int posX) {
-        this.posX = posX;
-    }
-
-    public void setPosY(int posY) {
-        this.posY = posY;
-    }
-
     public Laser shootLaser() {
         int laserX = posX + getResizedImage(69, 69).getHeight() / 2;
         int laserY = posY  + getResizedImage(69, 69).getWidth();
@@ -58,21 +42,32 @@ public class Alien {
         return new Rectangle(posX, posY, getResizedImage(69,69).getWidth(), getResizedImage(69,69).getHeight());
     }
 
-    public int getHealth() {
-        return lives;
-    }
-
     public void reduceHealth() {
         lives--;
     }
-
     public void moveLeft() {
-        posX--;
+        posX-=2;
     }
     public void moveRight() {
-        posX++;
+        posX+=2;
     }
     public void moveDown() {
         posY++;
+    }
+
+    public int getHealth() {
+        return lives;
+    }
+    public int getPosX() {
+        return posX;
+    }
+    public int getPosY() {
+        return posY;
+    }
+    public void setPosX(int posX) {
+        this.posX = posX;
+    }
+    public void setPosY(int posY) {
+        this.posY = posY;
     }
 }

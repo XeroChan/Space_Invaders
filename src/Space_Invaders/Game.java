@@ -1,7 +1,11 @@
 package Space_Invaders;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class Game extends JPanel {
     JPanel gameFrame, score, lives;
@@ -16,19 +20,15 @@ public class Game extends JPanel {
         score = new JPanel();
         score.setBackground(Color.decode("#4E458C"));
         gameFrame.add(score, BorderLayout.NORTH);
-        s = new JLabel("score");
-        s.setForeground(Color.decode("#ffffff"));
-        score.add(s);
 
         lives = new JPanel();
         lives.setBackground(Color.decode("#4E458C"));
         gameFrame.add(lives, BorderLayout.SOUTH);
-        l = new JLabel("lives");
-        l.setForeground(Color.decode("#ffffff"));
-        lives.add(l);
+
+
 
         timer = new Timer(10, e -> graphicsPanel.update());
-        graphicsPanel = new ImagePanel(frame, timer, s);
+        graphicsPanel = new ImagePanel(frame, timer, score, lives);
 
         gameFrame.add(graphicsPanel, BorderLayout.CENTER);
 
@@ -39,23 +39,38 @@ public class Game extends JPanel {
 
     private void run() {
         Spaceship spaceship = new Spaceship();
+        int spaceshipWidth = spaceship.getResizedImage(40, 40).getWidth();
+        int spaceshipHeight = spaceship.getResizedImage(40, 40).getHeight();
+        graphicsPanel.setSpaceshipDimension(spaceshipWidth,spaceshipHeight);
         graphicsPanel.addSpaceship(spaceship);
 
         new Thread(() -> {
-            int numAliens = 5;
+            int numAliens = 16;
+            int aliensPerRow = numAliens/4;
             int alienGap = 10;
-            Alien alienDim = new Alien();
-            int alienWidth = alienDim.getResizedImage(69, 69).getWidth();
-            int totalAlienWidth = alienWidth * numAliens;
-            int startX = (graphicsPanel.getWidth() - (totalAlienWidth + alienGap * (numAliens - 1))) / 2;
 
-            for (int i = 0; i < numAliens; i++) {
-                Alien alien = new Alien();
-                alien.setPosX(startX + i * (alienWidth + alienGap));
-                alien.setPosY(0);
-                graphicsPanel.addAlien(alien);
+            Alien alienDim = new Alien();
+            int alienWidth = alienDim.getResizedImage(40, 40).getWidth();
+            int alienHeight = alienDim.getResizedImage(40, 40).getHeight();
+
+            int totalAlienWidthRow = alienWidth * aliensPerRow;
+
+            int startX = (graphicsPanel.getWidth() - (totalAlienWidthRow + alienGap * (aliensPerRow - 1))) / 2;
+            int startY = 0;
+
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < aliensPerRow; j++) {
+                    Alien alien = new Alien();
+
+                    alien.setPosX(startX + j * (alienWidth + alienGap));
+                    alien.setPosY(startY);
+                    graphicsPanel.addAlien(alien);
+                }
+                startY+=(alienWidth+alienGap);
             }
             graphicsPanel.setAlienNumber(numAliens);
+            graphicsPanel.setAlienDimension(alienWidth,alienHeight);
+
         }).start();
     }
 }

@@ -53,6 +53,9 @@ public class Spaceship {
     public void setPosY(int posY) {
         this.posY = posY;
     }
+    public int getLives() {
+        return lives;
+    }
 
     public Laser shootLaser() {
         int laserX = posX + getResizedImage(69, 69).getHeight() / 2;
@@ -72,4 +75,6 @@ public class Spaceship {
     public void reduceHealth() {
         lives--;
     }
+
+
 }
