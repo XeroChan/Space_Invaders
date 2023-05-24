@@ -8,7 +8,7 @@ public class Endgame extends JPanel {
     JPanel endgamePanel,endScreen, score;
     JLabel s,e;
 
-    Endgame(int points) throws IOException {
+    Endgame(int points, boolean hasWon) throws IOException {
         endgamePanel = new JPanel();
         endgamePanel.setLayout(new BorderLayout());
 
@@ -28,7 +28,11 @@ public class Endgame extends JPanel {
         endScreen = new JPanel();
         endScreen.setBackground(Color.decode("#4E458C"));
         endgamePanel.add(endScreen, BorderLayout.CENTER);
-        e = new JLabel("You lose!");
+        if(hasWon){
+            e = new JLabel("You win!");
+        }else{
+            e = new JLabel("You lose!");
+        }
         e.setForeground(Color.decode("#ffffff"));
         endScreen.add(e);
 

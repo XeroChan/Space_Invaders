@@ -36,7 +36,9 @@ public class ImagePanel extends JPanel {
     private int points;
     private int numAliens;
     private boolean moveLeft = true;
+    private boolean hasWon = false;
     private JLabel highscore;
+    private boolean hasStarted = false;
 
     public void createBufferImage() {
         bufferImage = createImage(getWidth(), getHeight());
@@ -112,14 +114,25 @@ public class ImagePanel extends JPanel {
     }
 
     public void update() {
+        if (!hasStarted && !aliens.isEmpty()) {
+            hasStarted = true;
+        }
 
+        if (hasStarted && aliens.isEmpty() && !hasWon) {
+            hasWon = true;
+        }
+
+        if (hasWon) {
+            stop(hasWon);
+        }
         long currentTime = System.currentTimeMillis();
         for (Alien alien : aliens) {
             if (alien.getPosY() == getHeight()-alienHeight) {
-                stop();
+                stop(hasWon);
             }
         }
         if (!aliens.isEmpty() && currentTime - lastMoveTime >= MIN_TIME_BETWEEN_ALIEN_MOVEMENT) {
+            hasStarted = true;
             if (moveLeft) {
                 for (Alien alien : aliens) {
                     if (alien.getPosX() <= 0) {
@@ -215,7 +228,7 @@ public class ImagePanel extends JPanel {
     }
 
     private void handleSpaceshipAlienCollision() {
-        stop();
+        stop(hasWon);
     }
 
     private void handleLaserAlienCollision(Laser laser, Alien alien) {
@@ -239,16 +252,16 @@ public class ImagePanel extends JPanel {
             displayLives(spaceship);
         }
         else {
-            stop();
+            stop(hasWon);
         }
     }
 
-    private void stop() {
+    private void stop(boolean hasWon) {
         timer.stop();
         System.out.println("Timer stopped");
         Endgame endPanel;
         try {
-            endPanel = new Endgame(points);
+            endPanel = new Endgame(points, hasWon);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
