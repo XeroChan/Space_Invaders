@@ -14,10 +14,10 @@ public class ImagePanel extends JPanel {
     GameFrame frame;
     Timer timer;
     ArrayList<ImageIcon> heartIcons;
-    private ArrayList<Alien> aliens;
-    private ArrayList<Laser> spaceshipLasers;
-    private ArrayList<Laser> alienLasers;
-    private KeyboardHandling keyboard;
+    private final ArrayList<Alien> aliens;
+    private final ArrayList<Laser> spaceshipLasers;
+    private final ArrayList<Laser> alienLasers;
+    private final KeyboardHandling keyboard;
     private Spaceship spaceship;
     private int spaceshipWidth;
     private int spaceshipHeight;
