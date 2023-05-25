@@ -11,6 +11,8 @@ import java.util.Objects;
 
 public class ImagePanel extends JPanel {
     private final JPanel lives;
+    private final JPanel score;
+    private JLabel highscore;
     GameFrame frame;
     Timer timer;
     ArrayList<ImageIcon> heartIcons;
@@ -32,12 +34,10 @@ public class ImagePanel extends JPanel {
     private static final long MIN_TIME_BETWEEN_SHOTS = 200;
     private static final long MIN_TIME_BETWEEN_ALIEN_SHOTS = 280;
     private static final long MIN_TIME_BETWEEN_ALIEN_MOVEMENT = 40;
-    private final JPanel score;
     private int points;
     private int numAliens;
     private boolean moveLeft = true;
-    private boolean hasWon = false;
-    private JLabel highscore;
+    private boolean hasWon = false
     private boolean hasStarted = false;
 
     public void createBufferImage() {
