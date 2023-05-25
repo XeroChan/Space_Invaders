@@ -37,7 +37,7 @@ public class ImagePanel extends JPanel {
     private int points;
     private int numAliens;
     private boolean moveLeft = true;
-    private boolean hasWon = false
+    private boolean hasWon = false;
     private boolean hasStarted = false;
 
     public void createBufferImage() {
