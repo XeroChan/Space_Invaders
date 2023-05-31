@@ -21,10 +21,8 @@ public class ImagePanel extends JPanel {
     private final ArrayList<Laser> alienLasers;
     private final KeyboardHandling keyboard;
     private Spaceship spaceship;
-    private int spaceshipWidth;
-    private int spaceshipHeight;
-    private int alienWidth;
-    private int alienHeight;
+    private int objectWidth;
+    private int objectHeight;
     private boolean initialValuesSet = false;
     private Image bufferImage;
     private Graphics bufferGraphics;
@@ -45,7 +43,7 @@ public class ImagePanel extends JPanel {
         bufferGraphics = bufferImage.getGraphics();
     }
 
-    public ImagePanel(GameFrame frame, Timer timer, JPanel score, JPanel lives) {
+    public ImagePanel(GameFrame frame, Timer timer, JPanel score, JPanel lives, int objectWidth, int objectHeight) {
         aliens = new ArrayList<>();
         spaceshipLasers = new ArrayList<>();
         alienLasers = new ArrayList<>();
@@ -54,6 +52,8 @@ public class ImagePanel extends JPanel {
         this.timer = timer;
         this.score = score;
         this.lives = lives;
+        this.objectWidth = objectWidth;
+        this.objectHeight = objectHeight;
 
         heartIcons = new ArrayList<>();
 
@@ -127,7 +127,7 @@ public class ImagePanel extends JPanel {
         }
         long currentTime = System.currentTimeMillis();
         for (Alien alien : aliens) {
-            if (alien.getPosY() == getHeight()-alienHeight) {
+            if (alien.getPosY() == getHeight()-objectHeight) {
                 stop(hasWon);
             }
         }
@@ -151,7 +151,7 @@ public class ImagePanel extends JPanel {
             }
             if (!moveLeft) {
                 for (Alien alien : aliens) {
-                    if (alien.getPosX() >= getWidth()-alienWidth) {
+                    if (alien.getPosX() >= getWidth()-objectWidth) {
                         moveLeft = true;
                         break;
                     }
@@ -168,7 +168,7 @@ public class ImagePanel extends JPanel {
 
 
         for (int i=0; i<aliens.size();i++) {
-            if (CollisionHandling.checkCollision(spaceship, aliens.get(i))) {
+            if (CollisionHandling.checkCollision(spaceship, aliens.get(i), objectWidth, objectHeight)) {
                 handleSpaceshipAlienCollision();
                 break;
             }
@@ -176,7 +176,7 @@ public class ImagePanel extends JPanel {
 
         for (int i=0; i<spaceshipLasers.size();i++) {
             for (int j=0; j<aliens.size();j++) {
-                if (CollisionHandling.checkCollision(spaceshipLasers.get(i), aliens.get(j))) {
+                if (CollisionHandling.checkCollision(spaceshipLasers.get(i), aliens.get(j), objectWidth, objectHeight)) {
                     handleLaserAlienCollision(spaceshipLasers.get(i), aliens.get(j));
                     break;
                 }
@@ -184,7 +184,7 @@ public class ImagePanel extends JPanel {
         }
 
         for (int i=0; i<alienLasers.size();i++) {
-            if (CollisionHandling.checkCollision(alienLasers.get(i), spaceship)) {
+            if (CollisionHandling.checkCollision(alienLasers.get(i), spaceship, objectWidth, objectHeight)) {
                 handleLaserSpaceshipCollision(alienLasers.get(i));
                 break;
             }
@@ -193,11 +193,11 @@ public class ImagePanel extends JPanel {
         if (keyboard.isLeftPressed() && spaceship.getPosX() > 0) {
             spaceship.updatePosition(-3, 0);
         }
-        if (keyboard.isRightPressed() && spaceship.getPosX()+spaceshipWidth<getWidth()) {
+        if (keyboard.isRightPressed() && spaceship.getPosX()+objectWidth<getWidth()) {
             spaceship.updatePosition(3, 0);
         }
         if (keyboard.isSpacePressed() && currentTime - lastShotTime >= MIN_TIME_BETWEEN_SHOTS) {
-            Laser laser = spaceship.shootLaser();
+            Laser laser = spaceship.shootLaser(objectWidth, objectHeight);
             spaceshipLasers.add(laser);
             lastShotTime = currentTime;
         }
@@ -214,7 +214,7 @@ public class ImagePanel extends JPanel {
         for (int k = 0; k < aliens.size(); k++) {
             if (Math.random() < (0.1 / aliens.size())) {
                 if (currentTime - alienShotTime >= MIN_TIME_BETWEEN_ALIEN_SHOTS) {
-                    Laser laser = aliens.get(k).shootLaser();
+                    Laser laser = aliens.get(k).shootLaser(objectWidth, objectHeight);
                     alienLasers.add(laser);
                     alienShotTime = currentTime;
                 }
@@ -286,13 +286,13 @@ public class ImagePanel extends JPanel {
         bufferGraphics.fillRect(0, 0, getWidth(), getHeight());
         if (spaceship != null) {
             if (!initialValuesSet) {
-                spaceship.setPosX(getWidth() / 2 - spaceshipWidth/2);
-                spaceship.setPosY(getHeight() - spaceshipHeight);
+                spaceship.setPosX(getWidth() / 2 - objectWidth/2);
+                spaceship.setPosY(getHeight() - objectHeight);
                 initialValuesSet = true;
-            } else bufferGraphics.drawImage(spaceship.getResizedImage(spaceshipWidth, spaceshipHeight), spaceship.getPosX(), spaceship.getPosY(), null);
+            } else bufferGraphics.drawImage(spaceship.getResizedImage(objectWidth, objectHeight), spaceship.getPosX(), spaceship.getPosY(), null);
         }
         for (Alien alien : aliens) {
-            bufferGraphics.drawImage(alien.getResizedImage(alienWidth, alienHeight), alien.getPosX(), alien.getPosY(), null);
+            bufferGraphics.drawImage(alien.getResizedImage(objectWidth, objectHeight), alien.getPosX(), alien.getPosY(), null);
         }
         for (Laser laser : spaceshipLasers) {
             bufferGraphics.drawImage(laser.draw(), laser.getPosX(), laser.getPosY(), null);
@@ -307,13 +307,4 @@ public class ImagePanel extends JPanel {
         this.numAliens = numAliens;
     }
 
-    public void setAlienDimension(int alienWidth, int alienHeight) {
-        this.alienWidth = alienWidth;
-        this.alienHeight = alienHeight;
-    }
-
-    public void setSpaceshipDimension(int spaceshipWidth, int spaceshipHeight) {
-        this.spaceshipWidth = spaceshipWidth;
-        this.spaceshipHeight = spaceshipHeight;
-    }
 }

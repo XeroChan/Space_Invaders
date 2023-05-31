@@ -57,14 +57,14 @@ public class Spaceship {
         return lives;
     }
 
-    public Laser shootLaser() {
-        int laserX = posX + getResizedImage(69, 69).getHeight() / 2;
-        int laserY = posY  - getResizedImage(69, 69).getWidth() / 4;
+    public Laser shootLaser(int objectWidth, int objectHeight) {
+        int laserX = posX + objectHeight / 2;
+        int laserY = posY  - objectWidth / 4;
         return new Laser(laserX, laserY, 3, Color.red, 4, 10);
     }
 
-    public Rectangle getBounds() {
-        return new Rectangle(posX, posY, getResizedImage(69, 69).getWidth(), getResizedImage(69, 69).getHeight());
+    public Rectangle getBounds(int objectWidth, int objectHeight) {
+        return new Rectangle(posX, posY, objectWidth, objectHeight);
     }
 
 

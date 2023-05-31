@@ -11,6 +11,8 @@ public class Game extends JPanel {
     JPanel gameFrame, score, lives;
     JLabel s, l;
     static ImagePanel graphicsPanel;
+    int objectWidth = 40;
+    int objectHeight = 40;
     Timer timer;
 
     Game(GameFrame frame) {
@@ -28,7 +30,7 @@ public class Game extends JPanel {
 
 
         timer = new Timer(10, e -> graphicsPanel.update());
-        graphicsPanel = new ImagePanel(frame, timer, score, lives);
+        graphicsPanel = new ImagePanel(frame, timer, score, lives, objectWidth, objectHeight);
 
         gameFrame.add(graphicsPanel, BorderLayout.CENTER);
 
@@ -39,9 +41,9 @@ public class Game extends JPanel {
 
     private void run() {
         Spaceship spaceship = new Spaceship();
-        int spaceshipWidth = spaceship.getResizedImage(40, 40).getWidth();
-        int spaceshipHeight = spaceship.getResizedImage(40, 40).getHeight();
-        graphicsPanel.setSpaceshipDimension(spaceshipWidth,spaceshipHeight);
+
+
+
         graphicsPanel.addSpaceship(spaceship);
 
         new Thread(() -> {
@@ -50,10 +52,9 @@ public class Game extends JPanel {
             int alienGap = 10;
 
             Alien alienDim = new Alien();
-            int alienWidth = alienDim.getResizedImage(40, 40).getWidth();
-            int alienHeight = alienDim.getResizedImage(40, 40).getHeight();
 
-            int totalAlienWidthRow = alienWidth * aliensPerRow;
+
+            int totalAlienWidthRow = objectWidth * aliensPerRow;
 
             int startX = (graphicsPanel.getWidth() - (totalAlienWidthRow + alienGap * (aliensPerRow - 1))) / 2;
             int startY = 0;
@@ -62,14 +63,13 @@ public class Game extends JPanel {
                 for (int j = 0; j < aliensPerRow; j++) {
                     Alien alien = new Alien();
 
-                    alien.setPosX(startX + j * (alienWidth + alienGap));
+                    alien.setPosX(startX + j * (objectWidth + alienGap));
                     alien.setPosY(startY);
                     graphicsPanel.addAlien(alien);
                 }
-                startY+=(alienWidth+alienGap);
+                startY+=(objectWidth+alienGap);
             }
             graphicsPanel.setAlienNumber(numAliens);
-            graphicsPanel.setAlienDimension(alienWidth,alienHeight);
 
         }).start();
     }

@@ -32,14 +32,14 @@ public class Alien {
         return resizeImage(alienImage, targetWidth, targetHeight);
     }
 
-    public Laser shootLaser() {
-        int laserX = posX + getResizedImage(69, 69).getHeight() / 2;
-        int laserY = posY  + getResizedImage(69, 69).getWidth();
+    public Laser shootLaser(int objectWidth, int objectHeight) {
+        int laserX = posX + objectHeight / 2;
+        int laserY = posY  + objectWidth;
         return new Laser(laserX, laserY, 3, Color.green, 4, 10);
     }
 
-    public Rectangle getBounds() {
-        return new Rectangle(posX, posY, getResizedImage(69,69).getWidth(), getResizedImage(69,69).getHeight());
+    public Rectangle getBounds(int objectWidth, int objectHeight) {
+        return new Rectangle(posX, posY, objectWidth, objectHeight);
     }
 
     public void reduceHealth() {
