@@ -10,6 +10,7 @@ import java.util.List;
 
 
 public class Endgame extends JPanel {
+    private static final String RANKING_FILE = "ranking.txt";
 
     static class RankingEntry {
         String name;
@@ -79,7 +80,7 @@ public class Endgame extends JPanel {
 
     private List<RankingEntry> loadRanking() throws IOException {
         List<RankingEntry> ranking = new ArrayList<>();
-        File file = new File("src/data/ranking.txt");
+        File file = new File(RANKING_FILE);
 
         if (!file.exists()) {
             if (!file.createNewFile()) {
@@ -106,7 +107,7 @@ public class Endgame extends JPanel {
     }
 
     private void saveRanking(List<RankingEntry> ranking) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/data/ranking.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(RANKING_FILE))) {
             for (RankingEntry entry : ranking) {
                 writer.write(entry.name + ";" + entry.score);
                 writer.newLine();
