@@ -38,7 +38,7 @@ public class Menu {
             frame.setMinimumSize(frame.getSize());
             frame.pack();
             frame.requestFocus();
-            gamePanel.graphicsPanel.requestFocus();
+            gamePanel.requestGameFocus();
         });
 
         menu.add(title, BorderLayout.NORTH);
