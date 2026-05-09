@@ -4,10 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Game extends JPanel {
+    private static final int OBJECT_WIDTH = 40;
+    private static final int OBJECT_HEIGHT = 40;
+
     JPanel gameFrame, score, lives;
     static ImagePanel graphicsPanel;
-    int objectWidth = 40;
-    int objectHeight = 40;
     Timer timer;
 
     Game(GameFrame frame) {
@@ -25,7 +26,7 @@ public class Game extends JPanel {
 
 
         timer = new Timer(10, e -> graphicsPanel.update());
-        graphicsPanel = new ImagePanel(frame, timer, score, lives, objectWidth, objectHeight);
+        graphicsPanel = new ImagePanel(frame, timer, score, lives, OBJECT_WIDTH, OBJECT_HEIGHT);
 
         gameFrame.add(graphicsPanel, BorderLayout.CENTER);
 
@@ -45,7 +46,7 @@ public class Game extends JPanel {
         int aliensPerRow = numAliens/4;
         int alienGap = 10;
 
-        int totalAlienWidthRow = objectWidth * aliensPerRow;
+        int totalAlienWidthRow = OBJECT_WIDTH * aliensPerRow;
 
         int startX = (graphicsPanel.getWidth() - (totalAlienWidthRow + alienGap * (aliensPerRow - 1))) / 2;
         int startY = 0;
@@ -54,12 +55,11 @@ public class Game extends JPanel {
             for (int j = 0; j < aliensPerRow; j++) {
                 Alien alien = new Alien();
 
-                alien.setPosX(startX + j * (objectWidth + alienGap));
+                alien.setPosX(startX + j * (OBJECT_WIDTH + alienGap));
                 alien.setPosY(startY);
                 graphicsPanel.addAlien(alien);
             }
-            startY+=(objectWidth+alienGap);
+            startY+=(OBJECT_WIDTH+alienGap);
         }
-        graphicsPanel.setAlienNumber(numAliens);
     }
 }
