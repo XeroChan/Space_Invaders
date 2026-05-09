@@ -3,6 +3,8 @@ package Space_Invaders;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +28,10 @@ public class ImagePanel extends JPanel {
     private boolean initialValuesSet = false;
     private Image bufferImage;
     private Graphics bufferGraphics;
+    private int bufferWidth;
+    private int bufferHeight;
+    private int lastPanelWidth;
+    private int lastPanelHeight;
     private long lastShotTime;
     private long alienShotTime;
     private long lastMoveTime;
@@ -37,8 +43,13 @@ public class ImagePanel extends JPanel {
     private boolean hasStarted = false;
 
     public void createBufferImage() {
+        if (bufferGraphics != null) {
+            bufferGraphics.dispose();
+        }
         bufferImage = createImage(getWidth(), getHeight());
         bufferGraphics = bufferImage.getGraphics();
+        bufferWidth = getWidth();
+        bufferHeight = getHeight();
     }
 
     public ImagePanel(GameFrame frame, Timer timer, JPanel score, JPanel lives, int objectWidth, int objectHeight) {
@@ -71,7 +82,14 @@ public class ImagePanel extends JPanel {
 
 
 
+        setFocusable(true);
         addKeyListener(keyboard);
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                scaleObjectsToPanelSize();
+            }
+        });
     }
 
     public void addSpaceship(Spaceship spaceship) {
@@ -122,7 +140,7 @@ public class ImagePanel extends JPanel {
         }
         long currentTime = System.currentTimeMillis();
         for (Alien alien : aliens) {
-            if (alien.getPosY() == getHeight()-objectHeight) {
+            if (alien.getPosY() >= getHeight()-objectHeight) {
                 stop(false);
                 return;
             }
@@ -267,20 +285,64 @@ public class ImagePanel extends JPanel {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        endPanel.setPreferredSize(frame.getSize());
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(endPanel.endgamePanel);
-        frame.setMinimumSize(frame.getSize());
-        frame.pack();
-        frame.requestFocus();
-        endPanel.endgamePanel.requestFocus();
+        frame.setContentPane(endPanel.endgamePanel);
+        frame.revalidate();
+        frame.repaint();
+        endPanel.endgamePanel.requestFocusInWindow();
+    }
+
+    private void scaleObjectsToPanelSize() {
+        int currentWidth = getWidth();
+        int currentHeight = getHeight();
+
+        if (currentWidth <= 0 || currentHeight <= 0) {
+            return;
+        }
+
+        if (lastPanelWidth <= 0 || lastPanelHeight <= 0) {
+            lastPanelWidth = currentWidth;
+            lastPanelHeight = currentHeight;
+            return;
+        }
+
+        double xScale = (double) currentWidth / lastPanelWidth;
+        double yScale = (double) currentHeight / lastPanelHeight;
+
+        if (spaceship != null) {
+            spaceship.setPosX(clampX((int) Math.round(spaceship.getPosX() * xScale)));
+            spaceship.setPosY(Math.max(0, currentHeight - objectHeight));
+        }
+
+        for (Alien alien : aliens) {
+            alien.setPosX(clampX((int) Math.round(alien.getPosX() * xScale)));
+            alien.setPosY(Math.max(0, (int) Math.round(alien.getPosY() * yScale)));
+        }
+
+        for (Laser laser : spaceshipLasers) {
+            laser.scalePosition(xScale, yScale);
+        }
+
+        for (Laser laser : alienLasers) {
+            laser.scalePosition(xScale, yScale);
+        }
+
+        lastPanelWidth = currentWidth;
+        lastPanelHeight = currentHeight;
+        repaint();
+    }
+
+    private int clampX(int x) {
+        return Math.max(0, Math.min(x, getWidth() - objectWidth));
     }
 
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (bufferImage == null) {
+        if (getWidth() <= 0 || getHeight() <= 0) {
+            return;
+        }
+        if (bufferImage == null || bufferWidth != getWidth() || bufferHeight != getHeight()) {
             createBufferImage();
         }
         bufferGraphics.clearRect(0, 0, getWidth(), getHeight());

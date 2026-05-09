@@ -6,10 +6,10 @@ import java.awt.image.BufferedImage;
 public class Laser {
     private int posX;
     private int posY;
-    private int speed;
-    private Color color;
-    private int width;
-    private int height;
+    private final int speed;
+    private final Color color;
+    private final int width;
+    private final int height;
 
     public Laser(int x, int y, int speed, Color color, int width, int height) {
         this.posX = x;
@@ -47,6 +47,11 @@ public class Laser {
 
     public int getPosY() {
         return posY;
+    }
+
+    public void scalePosition(double xScale, double yScale) {
+        posX = (int) Math.round(posX * xScale);
+        posY = (int) Math.round(posY * yScale);
     }
 
 }

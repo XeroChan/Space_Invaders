@@ -64,6 +64,6 @@ public class Game extends JPanel {
     }
 
     public void requestGameFocus() {
-        graphicsPanel.requestFocus();
+        graphicsPanel.requestFocusInWindow();
     }
 }
