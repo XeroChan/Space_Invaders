@@ -1,15 +1,10 @@
 package Space_Invaders;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
 
 public class Game extends JPanel {
     JPanel gameFrame, score, lives;
-    JLabel s, l;
     static ImagePanel graphicsPanel;
     int objectWidth = 40;
     int objectHeight = 40;
@@ -34,7 +29,7 @@ public class Game extends JPanel {
 
         gameFrame.add(graphicsPanel, BorderLayout.CENTER);
 
-        run();
+        SwingUtilities.invokeLater(this::run);
 
         timer.start();
     }
@@ -46,31 +41,25 @@ public class Game extends JPanel {
 
         graphicsPanel.addSpaceship(spaceship);
 
-        new Thread(() -> {
-            int numAliens = 16;
-            int aliensPerRow = numAliens/4;
-            int alienGap = 10;
+        int numAliens = 16;
+        int aliensPerRow = numAliens/4;
+        int alienGap = 10;
 
-            Alien alienDim = new Alien();
+        int totalAlienWidthRow = objectWidth * aliensPerRow;
 
+        int startX = (graphicsPanel.getWidth() - (totalAlienWidthRow + alienGap * (aliensPerRow - 1))) / 2;
+        int startY = 0;
 
-            int totalAlienWidthRow = objectWidth * aliensPerRow;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < aliensPerRow; j++) {
+                Alien alien = new Alien();
 
-            int startX = (graphicsPanel.getWidth() - (totalAlienWidthRow + alienGap * (aliensPerRow - 1))) / 2;
-            int startY = 0;
-
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < aliensPerRow; j++) {
-                    Alien alien = new Alien();
-
-                    alien.setPosX(startX + j * (objectWidth + alienGap));
-                    alien.setPosY(startY);
-                    graphicsPanel.addAlien(alien);
-                }
-                startY+=(objectWidth+alienGap);
+                alien.setPosX(startX + j * (objectWidth + alienGap));
+                alien.setPosY(startY);
+                graphicsPanel.addAlien(alien);
             }
-            graphicsPanel.setAlienNumber(numAliens);
-
-        }).start();
+            startY+=(objectWidth+alienGap);
+        }
+        graphicsPanel.setAlienNumber(numAliens);
     }
 }

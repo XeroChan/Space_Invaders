@@ -3,63 +3,114 @@ package Space_Invaders;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+
 
 public class Endgame extends JPanel {
-    JPanel endgamePanel,endScreen, score;
-    JLabel s,e;
+
+    static class RankingEntry {
+        String name;
+        int score;
+
+        RankingEntry(String name, int score) {
+            this.name = name;
+            this.score = score;
+        }
+    }
+
+    JPanel endgamePanel, score;
 
     Endgame(int points, boolean hasWon) throws IOException {
         endgamePanel = new JPanel();
         endgamePanel.setLayout(new BorderLayout());
 
+        String playerName = JOptionPane.showInputDialog(
+                null,
+                "Enter your name:",
+                "Game Over",
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (playerName == null || playerName.isBlank()) {
+            playerName = "Player";
+        }
+
+        List<RankingEntry> ranking = loadRanking();
+        ranking.add(new RankingEntry(playerName, points));
+
+        ranking.sort(Comparator.comparingInt((RankingEntry e) -> e.score).reversed());
+
+        saveRanking(ranking);
+
         score = new JPanel();
         score.setBackground(Color.decode("#4E458C"));
+        score.setLayout(new BoxLayout(score, BoxLayout.Y_AXIS));
         endgamePanel.add(score, BorderLayout.NORTH);
-        if (Integer.parseInt(getHighscore())<points) {
-            s = new JLabel("Highscore = "+points);
-            setHighscore(points);
-        } else {
-            s = new JLabel("Highscore = "+getHighscore());
+
+        JLabel resultLabel = new JLabel(hasWon ? "You win!" : "You lose!");
+        resultLabel.setForeground(Color.WHITE);
+        score.add(resultLabel);
+
+        JLabel yourScore = new JLabel("Your score: " + points);
+        yourScore.setForeground(Color.WHITE);
+        score.add(yourScore);
+
+        JPanel rankingPanel = new JPanel();
+        rankingPanel.setBackground(Color.decode("#021226"));
+        rankingPanel.setLayout(new BoxLayout(rankingPanel, BoxLayout.Y_AXIS));
+
+        JLabel title = new JLabel("Ranking");
+        title.setForeground(Color.WHITE);
+        rankingPanel.add(title);
+
+        for (int i = 0; i < Math.min(10, ranking.size()); i++) {
+            RankingEntry entry = ranking.get(i);
+
+            JLabel row = new JLabel((i + 1) + ". " + entry.name + " - " + entry.score);
+            row.setForeground(Color.WHITE);
+            rankingPanel.add(row);
         }
-        s.setForeground(Color.decode("#ffffff"));
-        score.add(s);
 
-
-        endScreen = new JPanel();
-        endScreen.setBackground(Color.decode("#4E458C"));
-        endgamePanel.add(endScreen, BorderLayout.CENTER);
-        if(hasWon){
-            e = new JLabel("You win!");
-        }else{
-            e = new JLabel("You lose!");
-        }
-        e.setForeground(Color.decode("#ffffff"));
-        endScreen.add(e);
-
-        JPanel centerPanel = new JPanel(new GridBagLayout());
-        centerPanel.setBackground(Color.decode("#021226"));
-
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridx = 0;
-        c.gridy = 0;
-        c.anchor = GridBagConstraints.CENTER;
-        c.insets = new Insets(50, 0, 50, 0);
-        centerPanel.add(e, c);
-        centerPanel.setBackground(Color.decode("#4E458C"));
-
-        endgamePanel.add(centerPanel, BorderLayout.CENTER);
-
-    }
-    public void setHighscore(int points) throws IOException {
-
-        String str = String.valueOf(points);
-        BufferedWriter writer = new BufferedWriter(new FileWriter("src/data/highscore.txt"));
-        writer.write(str);
-        writer.close();
+        endgamePanel.add(rankingPanel, BorderLayout.CENTER);
     }
 
-    public String getHighscore() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("src/data/highscore.txt"));
-        return reader.readLine();
+    private List<RankingEntry> loadRanking() throws IOException {
+        List<RankingEntry> ranking = new ArrayList<>();
+        File file = new File("src/data/ranking.txt");
+
+        if (!file.exists()) {
+            if (!file.createNewFile()) {
+                throw new IOException("Could not create ranking file: " + file.getAbsolutePath());
+            }
+            return ranking;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(";");
+
+                if (parts.length == 2) {
+                    String name = parts[0];
+                    int score = Integer.parseInt(parts[1]);
+                    ranking.add(new RankingEntry(name, score));
+                }
+            }
+        }
+
+        return ranking;
+    }
+
+    private void saveRanking(List<RankingEntry> ranking) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/data/ranking.txt"))) {
+            for (RankingEntry entry : ranking) {
+                writer.write(entry.name + ";" + entry.score);
+                writer.newLine();
+            }
+        }
     }
 }
