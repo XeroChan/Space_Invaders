@@ -8,7 +8,7 @@ public class Game extends JPanel {
     private static final int OBJECT_HEIGHT = 40;
 
     JPanel gameFrame, score, lives;
-    static ImagePanel graphicsPanel;
+    ImagePanel graphicsPanel;
     Timer timer;
 
     Game(GameFrame frame) {
