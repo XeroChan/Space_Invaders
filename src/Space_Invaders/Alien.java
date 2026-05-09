@@ -7,16 +7,16 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Alien {
-    private BufferedImage alienImage;
+    private final BufferedImage alienImage;
     private int posX;
     private int posY;
     private int lives = 4;
 
     public Alien() {
         try {
-            alienImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("..\\assets\\alien.png")));
+            alienImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/assets/alien.png")));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Could not load alien image.", e);
         }
     }
 
