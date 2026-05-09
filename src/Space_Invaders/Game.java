@@ -8,7 +8,7 @@ public class Game extends JPanel {
     private static final int OBJECT_HEIGHT = 40;
 
     JPanel gameFrame, score, lives;
-    ImagePanel graphicsPanel;
+    private ImagePanel graphicsPanel;
     Timer timer;
 
     Game(GameFrame frame) {
@@ -61,5 +61,9 @@ public class Game extends JPanel {
             }
             startY+=(OBJECT_WIDTH+alienGap);
         }
+    }
+
+    public void requestGameFocus() {
+        graphicsPanel.requestFocus();
     }
 }
