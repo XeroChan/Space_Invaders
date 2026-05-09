@@ -7,7 +7,7 @@ import java.util.Objects;
 import javax.imageio.ImageIO;
 
 public class Spaceship {
-    private BufferedImage cannonImage;
+    private final BufferedImage cannonImage;
     private int posX;
     private int posY;
     private int lives = 3;
@@ -15,22 +15,14 @@ public class Spaceship {
 
     public Spaceship() {
         try {
-            cannonImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("..\\assets\\spaceship.png")));
+            cannonImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/assets/spaceship.png")));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Could not load spaceship image.", e);
         }
     }
 
-    public static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
-        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D graphics2D = resizedImage.createGraphics();
-        graphics2D.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
-        graphics2D.dispose();
-        return resizedImage;
-    }
-
     public BufferedImage getResizedImage(int targetWidth, int targetHeight) {
-        return resizeImage(cannonImage, targetWidth, targetHeight);
+        return ImageUtils.resizeImage(cannonImage, targetWidth, targetHeight);
     }
 
     public void updatePosition(int deltaX, int deltaY) {

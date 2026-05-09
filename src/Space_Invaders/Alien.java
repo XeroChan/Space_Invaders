@@ -20,16 +20,8 @@ public class Alien {
         }
     }
 
-    public static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
-        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D graphics2D = resizedImage.createGraphics();
-        graphics2D.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
-        graphics2D.dispose();
-        return resizedImage;
-    }
-
     public BufferedImage getResizedImage(int targetWidth, int targetHeight) {
-        return resizeImage(alienImage, targetWidth, targetHeight);
+        return ImageUtils.resizeImage(alienImage, targetWidth, targetHeight);
     }
 
     public Laser shootLaser(int objectWidth, int objectHeight) {
