@@ -21,8 +21,8 @@ public class ImagePanel extends JPanel {
     private final ArrayList<Laser> alienLasers;
     private final KeyboardHandling keyboard;
     private Spaceship spaceship;
-    private int objectWidth;
-    private int objectHeight;
+    private final int objectWidth;
+    private final int objectHeight;
     private boolean initialValuesSet = false;
     private Image bufferImage;
     private Graphics bufferGraphics;
@@ -33,9 +33,7 @@ public class ImagePanel extends JPanel {
     private static final long MIN_TIME_BETWEEN_ALIEN_SHOTS = 280;
     private static final long MIN_TIME_BETWEEN_ALIEN_MOVEMENT = 40;
     private int points;
-    private int numAliens;
     private boolean moveLeft = true;
-    private boolean hasWon = false;
     private boolean hasStarted = false;
 
     public void createBufferImage() {
@@ -58,7 +56,7 @@ public class ImagePanel extends JPanel {
         heartIcons = new ArrayList<>();
 
         try {
-            ImageIcon fullHeart = new ImageIcon(ImageIO.read(Objects.requireNonNull(getClass().getResource("..\\assets\\heart.png"))));
+            ImageIcon fullHeart = new ImageIcon(ImageIO.read(Objects.requireNonNull(getClass().getResource("/assets/heart.png"))));
 
             BufferedImage resizedFull = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB);
 
@@ -68,7 +66,7 @@ public class ImagePanel extends JPanel {
 
             heartIcons.add(new ImageIcon(resizedFull));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Could not load heart image.", e);
         }
 
 
@@ -118,17 +116,15 @@ public class ImagePanel extends JPanel {
             hasStarted = true;
         }
 
-        if (hasStarted && aliens.isEmpty() && !hasWon) {
-            hasWon = true;
-        }
-
-        if (hasWon) {
-            stop(hasWon);
+        if (hasStarted && aliens.isEmpty()) {
+            stop(true);
+            return;
         }
         long currentTime = System.currentTimeMillis();
         for (Alien alien : aliens) {
             if (alien.getPosY() == getHeight()-objectHeight) {
-                stop(hasWon);
+                stop(false);
+                return;
             }
         }
         if (!aliens.isEmpty() && currentTime - lastMoveTime >= MIN_TIME_BETWEEN_ALIEN_MOVEMENT) {
@@ -141,10 +137,10 @@ public class ImagePanel extends JPanel {
                     }
                 }
 
-                for (int m = 0; m < aliens.size(); m++) {
-                    aliens.get(m).moveLeft();
-                    if (aliens.get(m).getPosY() <= getHeight()) {
-                        aliens.get(m).moveDown();
+                for (Alien alien : aliens) {
+                    alien.moveLeft();
+                    if (alien.getPosY() <= getHeight()) {
+                        alien.moveDown();
                     }
                 }
                 lastMoveTime = currentTime;
@@ -156,10 +152,10 @@ public class ImagePanel extends JPanel {
                         break;
                     }
                 }
-                for (int m = 0; m < aliens.size(); m++) {
-                    aliens.get(m).moveRight();
-                    if (aliens.get(m).getPosY() <= getHeight()) {
-                        aliens.get(m).moveDown();
+                for (Alien alien : aliens) {
+                    alien.moveRight();
+                    if (alien.getPosY() <= getHeight()) {
+                        alien.moveDown();
                     }
                 }
                 lastMoveTime = currentTime;
@@ -167,25 +163,31 @@ public class ImagePanel extends JPanel {
         }
 
 
-        for (int i=0; i<aliens.size();i++) {
-            if (CollisionHandling.checkCollision(spaceship, aliens.get(i), objectWidth, objectHeight)) {
+        for (Alien alien : aliens) {
+            if (CollisionHandling.checkCollision(spaceship, alien, objectWidth, objectHeight)) {
                 handleSpaceshipAlienCollision();
                 break;
             }
         }
 
-        for (int i=0; i<spaceshipLasers.size();i++) {
-            for (int j=0; j<aliens.size();j++) {
-                if (CollisionHandling.checkCollision(spaceshipLasers.get(i), aliens.get(j), objectWidth, objectHeight)) {
-                    handleLaserAlienCollision(spaceshipLasers.get(i), aliens.get(j));
+        for (int i = spaceshipLasers.size() - 1; i >= 0; i--) {
+            Laser spaceshipLaser = spaceshipLasers.get(i);
+
+            for (int j = aliens.size() - 1; j >= 0; j--) {
+                Alien alien = aliens.get(j);
+
+                if (CollisionHandling.checkCollision(spaceshipLaser, alien, objectWidth, objectHeight)) {
+                    handleLaserAlienCollision(spaceshipLaser, alien);
                     break;
                 }
             }
         }
 
-        for (int i=0; i<alienLasers.size();i++) {
-            if (CollisionHandling.checkCollision(alienLasers.get(i), spaceship, objectWidth, objectHeight)) {
-                handleLaserSpaceshipCollision(alienLasers.get(i));
+        for (int i = alienLasers.size() - 1; i >= 0; i--) {
+            Laser alienLaser = alienLasers.get(i);
+
+            if (CollisionHandling.checkCollision(alienLaser, spaceship, objectWidth, objectHeight)) {
+                handleLaserSpaceshipCollision(alienLaser);
                 break;
             }
         }
@@ -228,7 +230,7 @@ public class ImagePanel extends JPanel {
     }
 
     private void handleSpaceshipAlienCollision() {
-        stop(hasWon);
+        stop(false);
     }
 
     private void handleLaserAlienCollision(Laser laser, Alien alien) {
@@ -252,7 +254,7 @@ public class ImagePanel extends JPanel {
             displayLives(spaceship);
         }
         else {
-            stop(hasWon);
+            stop(false);
         }
     }
 
@@ -301,10 +303,6 @@ public class ImagePanel extends JPanel {
             bufferGraphics.drawImage(laser.draw(), laser.getPosX(), laser.getPosY(), null);
         }
         g.drawImage(bufferImage, 0, 0, null);
-    }
-
-    public void setAlienNumber(int numAliens) {
-        this.numAliens = numAliens;
     }
 
 }
